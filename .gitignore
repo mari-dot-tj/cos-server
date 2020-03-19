@@ -1,7 +1,7 @@
 node_modules
 
 package-lock.json
-dbconfig.json
+config.json
 
 # vue.js
 .DS_Store
