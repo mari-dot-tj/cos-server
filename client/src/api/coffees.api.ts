@@ -1,7 +1,13 @@
 import httpClient from './httpClient';
 
-const END_POINT = '/coffees';
+//Using posts from jsonplaceholder.typeicode.com for testing purposes
+const END_POINT = '/posts';
 
+const getAllPosts = () => { httpClient.get(END_POINT).then(function (response) { console.log(response)}); console.log('Posts called');};
+
+export {
+    getAllPosts
+}
 
 /* Example users.api.js
 

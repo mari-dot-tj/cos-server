@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const httpClient = axios.create({
-    baseURL: process.env.VUE_APP_BASE_URL,
+    baseURL: 'https://jsonplaceholder.typicode.com',
     timeout: 1000,
     headers: {
         "Content-Type": "application/json",
@@ -10,3 +10,5 @@ const httpClient = axios.create({
 });
 
 export default httpClient;
+
+//baseURL: process.env.VUE_APP_BASE_URL,

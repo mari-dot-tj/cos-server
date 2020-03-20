@@ -7,10 +7,8 @@
 <script>
 export default {
     name: 'NewOrderProductList',
-    date () {
-        return {
-            
-        }
+    data: {    
+        
     }
 }
 </script>
