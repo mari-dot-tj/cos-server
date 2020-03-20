@@ -5,7 +5,7 @@ module.exports = class Customer extends Query{
 	/**	Get all categories from the database */
 	getAll (callback) {
 		super.query(
-			"select * FROM Customer2",
+			"select * FROM Customer",
 			[],
 			callback);
 	}

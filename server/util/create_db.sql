@@ -1,3 +1,11 @@
+drop table if exists Customer_coffee;
+drop table if exists Coffee_type;
+drop table if exists Bag_customer;
+drop table if exists Order_coffee;
+drop table if exists Fixed_order;
+drop table if exists Orders;
+drop table if exists Coffee;
+drop table if exists Customer;
 drop table if exists Jacobsen_Svart;
 drop table if exists Constants;
 drop table if exists Prod_day;
@@ -9,15 +17,6 @@ drop table if exists Category;
 drop table if exists Order_status;
 drop table if exists Type;
 drop table if exists Bag;
-drop table if exists Customer;
-drop table if exists Coffee;
-drop table if exists Order;
-drop table if exists Fixed_order;
-drop table if exists Customer_coffee;
-drop table if exists Order_coffee;
-drop table if exists Coffee_type;
-drop table if exists Bag_customer;
-
 
 create table Jacobsen_Svart (
     user_id int(8) not null auto_increment,
@@ -50,7 +49,7 @@ create table Delivery_day (
 
 create table Delivery (
     delivery_id int not null auto_increment,
-    delivery_option varchar not null,
+    delivery_option varchar(100) not null,
     price smallint,
     primary key (delivery_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
@@ -83,20 +82,20 @@ create table Order_status (
 
 create table Type (
     type_id int not null auto_increment,
-    name varchar not null,
+    name varchar(100) not null,
     batch_size tinyint not null,
     primary key (type_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Bag (
     bag_id int not null auto_increment,
-    size varchar not null,
+    size varchar(40) not null,
     primary key (bag_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Customer (
     customer_id int not null auto_increment,
-    name varchar not null,
+    name varchar(200) not null,
     address varchar(100) not null,
     phone int(8) not null,
     org_number int not null unique,
@@ -105,6 +104,8 @@ create table Customer (
     password text,
     secret varchar(32),
     subsciption boolean,
+    zip_code smallint not null,
+    ref_id int not null,
     primary key (customer_id),
     foreign key (zip_code) references Place(zip_code),
     foreign key (ref_id) references Reference(ref_id)
@@ -115,16 +116,21 @@ create table Coffee (
     coffee_id int not null auto_increment,
     name varchar(100) not null,
     description varchar(500) not null,
+    category_id int not null,
     primary key (coffee_id),
     foreign key (category_id) references Category(category_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
-create table Order (
+create table Orders (
     order_id int not null auto_increment,
     order_date timestamp not null default current_timestamp on update current_timestamp,
     info varchar(200),
-    delivery_date timestamp not null,
-    production_date timestamp,
+    delivery_date date not null,
+    production_date timestamp null,
+    customer_id int not null,
+    status_id int not null,
+    delivery_id int not null,
+    ref_id int not null,
     primary key (order_id),
     foreign key (customer_id) references Customer(customer_id),
     foreign key (status_id) references Order_status(status_id),
@@ -134,10 +140,11 @@ create table Order (
 
 create table Fixed_order (
     fixed_order_id int not null auto_increment,
-    interval tinyint not null,
-    day_of_week varchar not null,
+    order_interval tinyint not null,
+    day_of_week varchar(20) not null,
     primary key (fixed_order_id),
-    foreign key (order_id) references Order(order_id)
+    order_id int not null,
+    foreign key (order_id) references Orders(order_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Customer_coffee (
@@ -157,7 +164,7 @@ create table Order_coffee (
     grind boolean not null,
     primary key (order_coffee_id, coffee_id, order_id),
     foreign key (coffee_id) references Coffee(coffee_id),
-    foreign key (order_id) references Order(order_id)
+    foreign key (order_id) references Orders(order_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Coffee_type (
@@ -177,8 +184,5 @@ create table Bag_customer (
     foreign key (bag_id) references Bag(bag_id),
     foreign key (customer_id) references Customer(customer_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
-
-
-
 
 
