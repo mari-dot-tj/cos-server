@@ -8,7 +8,7 @@
       height= "80px"
       class="general"
     >
-      <v-img src="../assets/logo.png" max-height="100px" max-width="100px"/>
+      <v-img src="../../assets/logo.png" max-height="100px" max-width="100px"/>
       <v-toolbar-items>
         <NavBarButton 
         v-for="item in navBarItems"

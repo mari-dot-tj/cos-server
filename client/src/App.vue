@@ -11,13 +11,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import NavBar from './components/NavBar.vue'
+import NavBar from './components/NavBar/NavBar.vue';
 
 export default Vue.extend({
   name: 'App',
 
   components: {
-    NavBar
+    NavBar,
   },
 
   data: () => ({

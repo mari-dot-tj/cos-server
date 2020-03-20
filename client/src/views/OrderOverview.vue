@@ -1,5 +1,7 @@
 <template>
+<div>
   <p>OrderOverview page</p>
+  </div>
 </template>
 
 <script>

@@ -1,12 +1,17 @@
 <template>
-  <p>NewOrder page</p>
+  <v-container>
+    <NewOrderStepper/>
+  </v-container>
 </template>
 
 <script>
+import Vue from 'vue'
+import NewOrderStepper from '../components/NewOrder/NewOrderStepper.vue'
 
-export default {
+export default Vue.extend({
   name: 'NewOrder',
   components: {
+    NewOrderStepper
   }
-}
+})
 </script>
