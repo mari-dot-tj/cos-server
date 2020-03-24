@@ -1,6 +1,6 @@
 import httpClient from './httpClient';
 
-class CoffeeServices {
+class CoffeeService {
 
     private END_POINT = '/coffee';
 
@@ -13,7 +13,7 @@ class CoffeeServices {
     };
 
 }
-const coffeeService = new CoffeeServices;
+const coffeeService = new CoffeeService;
 export default coffeeService;
 
 /* Example users.api.js
