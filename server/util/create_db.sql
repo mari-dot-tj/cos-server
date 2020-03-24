@@ -17,6 +17,7 @@ drop table if exists Category;
 drop table if exists Order_status;
 drop table if exists Type;
 drop table if exists Bag;
+drop table if exists Ground_level;
 
 create table Jacobsen_Svart (
     user_id int(8) not null auto_increment,
@@ -32,12 +33,19 @@ create table Constants (
     weight_loss double,
     avg_batches_pr_hour int(4),
     grinding_fee smallint,
-    order_before_prod_day timestamp not null
+    order_before_prod_day date not null
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+
+create table Ground_level (
+    ground_level_id int(4) not null auto_increment,
+    level_name varchar(50) not null,
+    grinding_fee smallint not null,
+    primary key (ground_level_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Prod_day (
     prod_day_id int not null auto_increment,
-    day_of_week timestamp not null,
+    day_of_week varchar(30) not null,
     primary key (prod_day_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
@@ -55,7 +63,7 @@ create table Delivery (
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Place (
-    zip_code smallint not null auto_increment,
+    zip_code smallint not null,
     province varchar(100) not null,
     primary key (zip_code)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
@@ -90,6 +98,7 @@ create table Type (
 create table Bag (
     bag_id int not null auto_increment,
     size varchar(40) not null,
+    grams int(5) not null,
     primary key (bag_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
@@ -126,7 +135,7 @@ create table Orders (
     order_date timestamp not null default current_timestamp on update current_timestamp,
     info varchar(200),
     delivery_date date not null,
-    production_date timestamp null,
+    production_date date default null,
     customer_id int not null,
     status_id int not null,
     delivery_id int not null,
@@ -142,8 +151,8 @@ create table Fixed_order (
     fixed_order_id int not null auto_increment,
     order_interval tinyint not null,
     day_of_week varchar(20) not null,
-    primary key (fixed_order_id),
     order_id int not null,
+    primary key (fixed_order_id),
     foreign key (order_id) references Orders(order_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
@@ -161,10 +170,14 @@ create table Order_coffee (
     order_coffee_id int not null auto_increment,
     coffee_id int not null,
     order_id int not null,
-    grind boolean not null,
+    bag_id int not null,
+    ground_level_id int not null,
+    quantity int(5) not null,
     primary key (order_coffee_id, coffee_id, order_id),
     foreign key (coffee_id) references Coffee(coffee_id),
-    foreign key (order_id) references Orders(order_id)
+    foreign key (order_id) references Orders(order_id),
+    foreign key (bag_id) references Bag(bag_id),
+    foreign key (ground_level_id) references Ground_level(ground_level_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Coffee_type (

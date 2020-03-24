@@ -39,10 +39,18 @@ let coffee = new Coffee(pool);
 
 
 app.get('/coffee', (req, res) => {
+    // coffee.getAll((status, data)).then((coffees) =>{
+    //     if(!coffees){
+    //         res.status(404).send()
+    //     }
+    //     res.json(coffees)
+    // }).catch((e) => {
+    //     res.status(status).send()
+    // })
+    
     coffee.getAll((status, data) => {
         res.status(status);
         res.json(data);
-        console.log(data)
     })
 });
 
@@ -54,13 +62,12 @@ app.get('/coffee/:id', (req, res) => {
 });
 
 
-// app.get('/customer', (req, res) => {
-//     customer.getAll((status, data) => {
-//         res.status(status);
-//         res.json(data);
-//         console.log(data)
-//     })
-// });
+app.get('/customer', (req, res) => {
+    customer.getAll((status, data) => {
+        res.status(status);
+        res.json(data);
+    })
+});
 
 app.get('', (req, res) => {
     res.send("Heii hssei")

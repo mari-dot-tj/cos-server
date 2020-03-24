@@ -6,10 +6,9 @@ module.exports = class Query {
   
     query(sql, params, callback) {
       this.pool.getConnection((err, connection) => {
-        console.log("query: connected to database");
         if (err) {
-          console.log("query: error connecting");
-          callback(500, { error: "feil ved ved oppkobling" });
+          console.log("query: error connecting to database");
+          callback(500, { error: "error connecting to database" });
         } else {
           console.log("query: running sql: " + sql);
           connection.query(sql, params, (err, rows) => {
