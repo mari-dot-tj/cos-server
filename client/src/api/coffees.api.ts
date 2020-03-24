@@ -1,13 +1,20 @@
 import httpClient from './httpClient';
 
-//Using posts from jsonplaceholder.typeicode.com for testing purposes
-const END_POINT = '/posts';
+class CoffeeServices {
 
-const getAllPosts = () => { httpClient.get(END_POINT).then(function (response) { console.log(response)}); console.log('Posts called');};
+    private END_POINT = '/coffee';
 
-export {
-    getAllPosts
+    async getAllCoffees(): Promise<Array<object>> { 
+        return httpClient.get(this.END_POINT)
+            .then(function (response) {
+                console.log(response);
+                return response.data
+            });
+    };
+
 }
+const coffeeService = new CoffeeServices;
+export default coffeeService;
 
 /* Example users.api.js
 

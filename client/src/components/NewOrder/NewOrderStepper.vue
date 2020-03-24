@@ -17,8 +17,8 @@
     <v-stepper-items>
       <v-stepper-content step="1">
         <v-card
-          class="mb-12"
-          height="200px"
+          class="mb-12 scroll"
+          height="400px"
         >
         <NewOrderProductList/>
         </v-card>
@@ -28,7 +28,7 @@
         <v-card
           class="mb-12"
           color="grey lighten-1"
-          height="200px"
+          height="400px"
         ></v-card>
 
         
@@ -38,7 +38,7 @@
         <v-card
           class="mb-12"
           color="grey lighten-1"
-          height="200px"
+          height="400px"
         ></v-card>
     
       </v-stepper-content>
@@ -77,8 +77,15 @@
   </v-stepper>
 </template>
 
+<style scoped>
+  .scroll {
+    overflow: auto;
+  }
+</style>
+
 <script>
 import NewOrderProductList from './NewOrderProductList.vue'
+
   export default {
     data () {
       return {
