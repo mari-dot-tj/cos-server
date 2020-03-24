@@ -3,32 +3,48 @@
         <v-list>
             <v-list-item
             v-for="coffee in allCoffees"
-            :key="coffee.coffee_id"
-            >
-                <v-list-item-content>
-                    {{coffee.name}}
-                </v-list-item-content>
-                <v-spacer></v-spacer>
-                <v-list-item-action>
-                    <!--<v-overflow-btn
-                    class="my-2"
-                    :items="dropdown_font"
-                    label="Overflow Btn"
-                    target="#dropdown-example"
-                    ></v-overflow-btn>-->
-                    <v-spacer></v-spacer>
-                    <v-btn outlined color="primary">
-                        Add to order
-                    </v-btn>
-                </v-list-item-action>
+            :key="coffee.coffee_id">
+                <v-row>
+                    <v-col cols="4">
+                        {{coffee.name}}
+                    </v-col>
+                    <v-col cols="2">
+                        <v-select
+                        class="rowOnLine"
+                        :items="dropdown"
+                        label="Weight"
+                        ></v-select>
+                    </v-col>
+                    <v-col cols="2">
+                        <v-select
+                        class="rowOnLine"
+                        :items="dropdown"
+                        label="Whole beans"
+                        ></v-select>
+                    </v-col>
+                    <v-col cols="2">
+                        <v-select
+                        class="rowOnLine"
+                        :items="dropdown"
+                        label="Amount"
+                        ></v-select>
+                    </v-col>
+                    <v-col cols="2">
+                        <v-btn outlined color="primary">
+                            Add to order
+                        </v-btn>
+                    </v-col>
+                </v-row>
             </v-list-item>
-            <v-divider></v-divider>
         </v-list>
     </v-container>
 </template>
 
 <style scoped>
-
+.rowOnLine {
+    margin-top: 0px;
+    padding-top: 0px;
+}
 </style>
 
 <script>
@@ -36,7 +52,7 @@ import { mapState } from 'vuex'
 export default {
     name: 'NewOrderProductList',
     data: () => ({
-      dropdown_font: ['test1', 'test2', 'test3']
+      dropdown: ['test1', 'test2', 'test3'],
     }),
     computed: {
         ...mapState('products', ['allCoffees'])
