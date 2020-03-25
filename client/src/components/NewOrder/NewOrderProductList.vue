@@ -1,13 +1,14 @@
 <template>
     <v-container>
         <NewOrderProductFields/>
-        <NewOrderProductItem
+        <NewOrderProductListItem
         v-for="coffee in allCoffees"
         v-on:add-to-order="addToOrder"
         :key="coffee.coffee_id"
+        :coffeeId="coffee.coffee_id"
         :coffeeName="coffee.name"
         :weightDropdown="dropdown"
-        :grindDropdown="dropdown"
+        :groundLevelDropdown="dropdown"
         />
     </v-container>
 </template>
@@ -21,7 +22,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import NewOrderProductItem from './NewOrderProductItem.vue'
+import NewOrderProductListItem from './NewOrderProductListItem.vue'
 import NewOrderProductFields from './NewOrderProductFields.vue'
 
 export default {
@@ -36,8 +37,9 @@ export default {
         init(){
             this.$store.dispatch('products/getAllCoffees')
         },
-        addToOrder: function(name, weight, grind, amount){
-            alert("Ready to add! Name: " + name + " , weight "+ weight + " , Grind level: "+ grind + ", Amount: " + amount);
+        addToOrder: function(coffeeId, coffeeName, weight, groundLevel, amount){
+            alert("Ready to add! Id: " + coffeeId +", Name: " + coffeeName + " , weight "+ weight + " , Grind level: "+ groundLevel + ", Amount: " + amount);
+            this.$store.dispatch('order/addProductToOrder', {coffee_id: coffeeId, weight, groundLevel, amount})
         }
     },
     mounted() {
@@ -45,7 +47,7 @@ export default {
     },
     components: {
         NewOrderProductFields,
-        NewOrderProductItem
+        NewOrderProductListItem
     }
 }
 </script>

@@ -16,11 +16,11 @@
         <v-col cols="2">
             <v-select
             class="rowOnLine"
-            :items="grindDropdown"
+            :items="groundLevelDropdown"
             label="Whole beans"
             prepend-icon="mdi-fire"
             single-line
-            v-model="grind"
+            v-model="groundLevel"
             ></v-select>
         </v-col>
         <v-col cols="2">
@@ -38,7 +38,7 @@
             <v-btn 
             outlined color="primary" 
             class="rowOnLine" 
-            @click="$emit('add-to-order', name, weight, grind, amount)">
+            @click="$emit('add-to-order', coffeeId, coffeeName, weight, groundLevel, amount) && resetFields()">
                 Add to order
             </v-btn>
         </v-col>
@@ -54,17 +54,21 @@
 
 <script>
 export default {
-    name: 'NewOrderProductItem',
+    name: 'NewOrderProductListItem',
     props: {
         coffeeName: {
             type: String,
+            required: true
+        },
+        coffeeId: {
+            type: Number,
             required: true
         },
         weightDropdown: {
             type: Array,
             required: true
         },
-        grindDropdown: {
+        groundLevelDropdown: {
             type: Array,
             required: true,
             default: 'Whole beans'
@@ -72,9 +76,8 @@ export default {
     },
     data: function (){
         return{
-            name: this.coffeeName,
             weight: '250 gram',
-            grind: 'Whole beans',
+            groundLevel: 'Whole beans',
             amount: 0
         }
     },
@@ -84,6 +87,11 @@ export default {
         },
         decrementAmount(){
             this.amount == 0 ? this.amount = 0 : this.amount--;
+        },
+        resetFields(){
+            this.weight = '250 gram';
+            this.groundLevel = 'Whole beans';
+            this.amount = 0;
         }
     }
 }
