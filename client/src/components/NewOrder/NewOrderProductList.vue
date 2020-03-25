@@ -7,9 +7,19 @@
         :key="coffee.coffee_id"
         :coffeeId="coffee.coffee_id"
         :coffeeName="coffee.name"
-        :weightDropdown="dropdown"
-        :groundLevelDropdown="dropdown"
+        :weightDropdown="allBagSizes"
+        :groundLevelDropdown="allGroundLevels"
         />
+        <v-snackbar v-model="addedToOrderSnackBar">
+            {{ addedToOrderSnackBarText }}
+            <v-btn
+                color="primary"
+                text
+                @click="addedToOrderSnackBar = false"
+            >
+        Close
+      </v-btn>
+        </v-snackbar>
     </v-container>
 </template>
 
@@ -27,19 +37,26 @@ import NewOrderProductFields from './NewOrderProductFields.vue'
 
 export default {
     name: 'NewOrderProductList',
-    data: () => ({
-      dropdown: ['test1', 'test2', 'test3'],
-    }),
     computed: {
-        ...mapState('products', ['allCoffees'])
+        ...mapState('products',['allCoffees']),
+        ...mapState('products', ['allBagSizes']),
+        ...mapState('products', ['allGroundLevels'])
     },
+    data: () => ({
+        addedToOrderSnackBar: false,
+        addedToOrderSnackBarText: ""
+    }),
     methods: {
         init(){
-            this.$store.dispatch('products/getAllCoffees')
+            this.$store.dispatch('products/getAllCoffees'),
+            this.$store.dispatch('products/getAllBagSizes'),
+            this.$store.dispatch('products/getAllGroundLevels')
         },
         addToOrder: function(coffeeId, coffeeName, weight, groundLevel, amount){
-            alert("Ready to add! Id: " + coffeeId +", Name: " + coffeeName + " , weight "+ weight + " , Grind level: "+ groundLevel + ", Amount: " + amount);
+            const text = "Added to order! Id: " + coffeeId +", Name: " + coffeeName + " , weight "+ weight + " , Grind level: "+ groundLevel + ", Amount: " + amount
             this.$store.dispatch('order/addProductToOrder', {coffee_id: coffeeId, weight, groundLevel, amount})
+            this.addedToOrderSnackBarText = text
+            this.addedToOrderSnackBar=true
         }
     },
     mounted() {
