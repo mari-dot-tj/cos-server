@@ -3,10 +3,10 @@ const Query = require ("./query.js")
 module.exports = class Customer extends Query{
 	
 	/**	Get all customers from the database */
-	getAll (callback) {
-		super.query(
+	getAll = async () => {
+		return await super.query(
 			"select * FROM Customer",
-			[],
-			callback);
+			[]
+		)
 	}
 }
