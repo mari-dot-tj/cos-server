@@ -32,7 +32,6 @@ export default {
             this.$store.dispatch('order/removeProductFromOrder', item_id)
         },
         changeItemAmount: function(item_id, newAmount){
-            console.log("Hei fredrik");
             this.$store.dispatch('order/changeItemAmount', {item_id, newAmount});
         }
     }
