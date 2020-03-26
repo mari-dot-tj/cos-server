@@ -26,12 +26,11 @@
 
       <v-stepper-content step="2">
         <v-card
-          class="mb-12"
-          color="grey lighten-1"
+          class="mb-12 scroll"
           height="400px"
-        ></v-card>
-
-        
+        >
+        <NewOrderOrderOverview/>
+        </v-card>
       </v-stepper-content>
 
       <v-stepper-content step="3">
@@ -85,6 +84,7 @@
 
 <script>
 import NewOrderProductList from './NewOrderProductList.vue'
+import NewOrderOrderOverview from './NewOrderOrderOverview'
 
   export default {
     data () {
@@ -93,7 +93,8 @@ import NewOrderProductList from './NewOrderProductList.vue'
       }
     },
     components: {
-        NewOrderProductList
+        NewOrderProductList,
+        NewOrderOrderOverview
     }
   }
 </script>

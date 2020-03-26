@@ -1,13 +1,15 @@
 <template>
     <v-row>
         <v-col cols="4">
-            {{coffeeName}}
+            <span class="rowOnLine">
+                {{coffeeName}}
+            </span>
         </v-col>
         <v-col cols="2">
             <v-select
             class="rowOnLine"
             :items="weightDropdown"
-            :label="weightDropdown[0]"
+            :label="weight"
             single-line
             v-model="weight"
             ></v-select>
@@ -16,24 +18,24 @@
             <v-select
             class="rowOnLine"
             :items="groundLevelDropdown"
-            :label="groundLevelDropdown[0]"
+            :label="groundLevel"
             single-line
             v-model="groundLevel"
             ></v-select>
         </v-col>
         <v-col cols="2">
             <v-form ref="amountField">
-            <v-text-field
-            class="rowOnLine"
-            type="number"
-            min=0
-            v-model="amount"
-            prepend-icon="mdi-minus"
-            append-icon="mdi-plus"
-            @click:append="incrementAmount"
-            @click:prepend="decrementAmount"
-            :rules="amountFieldRules"
-        ></v-text-field>
+                <v-text-field
+                class="rowOnLine"
+                type="number"
+                min=0
+                v-model="amount"
+                prepend-icon="mdi-minus"
+                append-icon="mdi-plus"
+                @click:append="incrementAmount"
+                @click:prepend="decrementAmount"
+                :rules="amountFieldRules"
+                ></v-text-field>
             </v-form>
         </v-col>
         <v-col cols="2">
@@ -80,8 +82,8 @@ export default {
     data: function (){
         return{
             valid: true,
-            weight: this.weightDropdown[0],
-            groundLevel: this.groundLevelDropdown[0],
+            weight: "",
+            groundLevel: "",
             amount: 0,
             amountFieldRules: [
                 v => v>0 || 'Amount must be over 0!'
@@ -89,6 +91,10 @@ export default {
         }
     },
     methods: {
+        init(){
+            this.weight = this.weightDropdown[0]
+            this.groundLevel = this.groundLevelDropdown[0]
+        },
         incrementAmount(){
             this.amount++;
         },
@@ -103,13 +109,12 @@ export default {
         },
         checkIfValid(){
             if((this.$refs.amountField).validate()){
-                console.log('true')
                 return true
             }else return false
         }
     },
-    computed: {
-        
+    mounted(){
+        this.init();
     }
 }
 </script>

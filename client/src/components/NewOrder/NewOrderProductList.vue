@@ -43,6 +43,7 @@ export default {
         ...mapState('products', ['allGroundLevels'])
     },
     data: () => ({
+        itemId: 0,
         addedToOrderSnackBar: false,
         addedToOrderSnackBarText: ""
     }),
@@ -52,11 +53,19 @@ export default {
             this.$store.dispatch('products/getAllBagSizes'),
             this.$store.dispatch('products/getAllGroundLevels')
         },
+        incrementItemId(){
+            return this.itemId++;
+        },
         addToOrder: function(coffeeId, coffeeName, weight, groundLevel, amount){
-            const text = "Added to order! Id: " + coffeeId +", Name: " + coffeeName + " , weight "+ weight + " , Grind level: "+ groundLevel + ", Amount: " + amount
-            this.$store.dispatch('order/addProductToOrder', {coffee_id: coffeeId, weight, groundLevel, amount})
+            let text = "Failed to add to order."
+            if(this.$store.dispatch('order/addProductToOrder', {item_id: this.itemId, coffee_id: coffeeId, coffee_name: coffeeName, weight, ground_level: groundLevel, amount})){
+                text = "Added to order! Id: " + coffeeId +", Name: " + coffeeName + " , weight "+ weight + " , Grind level: "+ groundLevel + ", Amount: " + amount
+            }else{
+                text = "Failed to add to order"
+            }
             this.addedToOrderSnackBarText = text
             this.addedToOrderSnackBar=true
+            this.incrementItemId()
         }
     },
     mounted() {
