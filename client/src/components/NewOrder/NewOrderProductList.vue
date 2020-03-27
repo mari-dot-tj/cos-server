@@ -7,7 +7,7 @@
         :key="coffee.coffee_id"
         :coffeeId="coffee.coffee_id"
         :coffeeName="coffee.name"
-        :weightDropdown="allBagSizes"
+        :bagArray="allBags"
         :groundLevelDropdown="allGroundLevels"
         />
         <v-snackbar v-model="addedToOrderSnackBar">
@@ -39,7 +39,7 @@ export default {
     name: 'NewOrderProductList',
     computed: {
         ...mapState('products',['allCoffees']),
-        ...mapState('products', ['allBagSizes']),
+        ...mapState('products', ['allBags']),
         ...mapState('products', ['allGroundLevels'])
     },
     data: () => ({
@@ -50,15 +50,15 @@ export default {
     methods: {
         init(){
             this.$store.dispatch('products/getAllCoffees'),
-            this.$store.dispatch('products/getAllBagSizes'),
+            this.$store.dispatch('products/getAllBags'),
             this.$store.dispatch('products/getAllGroundLevels')
         },
         incrementItemId(){
             return this.itemId++;
         },
-        addToOrder: function(coffeeId, coffeeName, weight, groundLevel, amount){
+        addToOrder: function(coffeeId, coffeeName, weight, grams, groundLevel, amount){
             let text = "Failed to add to order."
-            if(this.$store.dispatch('order/addProductToOrder', {item_id: this.itemId, coffee_id: coffeeId, coffee_name: coffeeName, weight, ground_level: groundLevel, amount})){
+            if(this.$store.dispatch('order/addProductToOrder', {item_id: this.itemId, coffee_id: coffeeId, coffee_name: coffeeName, weight, grams, ground_level: groundLevel, amount})){
                 text = "Added to order! Id: " + coffeeId +", Name: " + coffeeName + " , weight "+ weight + " , Grind level: "+ groundLevel + ", Amount: " + amount
             }else{
                 text = "Failed to add to order"

@@ -85,8 +85,8 @@
 
 <script>
 import NewOrderProductList from './NewOrderProductList.vue'
-import NewOrderOrderOverview from './NewOrderOrderOverview'
-import NewOrderDelivery from './NewOrderDelivery'
+import NewOrderOrderOverview from './NewOrderOrderOverview.vue'
+import NewOrderDelivery from './NewOrderDelivery.vue'
 
   export default {
     data () {

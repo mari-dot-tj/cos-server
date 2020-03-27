@@ -49,7 +49,7 @@
             <v-btn 
             outlined color="primary" 
             class="rowOnLine" 
-            @click="checkIfValid() ? $emit('add-to-order', coffeeId, coffeeName, weight, groundLevel, amount) && resetFields() : valid=false">
+            @click="checkIfValid() ? $emit('add-to-order', coffeeId, coffeeName, weight, getGramsOfWeight(weight), groundLevel, amount) & resetFields() : valid=false">
                 Add to order
             </v-btn>
         </v-col>
@@ -81,7 +81,7 @@ export default {
             type: Number,
             required: true
         },
-        weightDropdown: {
+        bagArray: {
             type: Array,
             required: true,
         },
@@ -94,8 +94,10 @@ export default {
         return{
             valid: true,
             weight: "",
+            grams: 0,
             groundLevel: "",
             amount: 0,
+            weightDropdown: [],
             amountFieldRules: [
                 v => v>0 || 'Amount must be over 0!'
             ]
@@ -103,6 +105,9 @@ export default {
     },
     methods: {
         init(){
+            this.bagArray.map(bagObj => {
+                this.weightDropdown.push(bagObj.size)
+            })
             this.weight = this.weightDropdown[0]
             this.groundLevel = this.groundLevelDropdown[0]
         },
@@ -113,18 +118,24 @@ export default {
             this.amount == 0 ? this.amount = 0 : this.amount--;
         },
         resetFields(){
-            this.weight = this.weightDropdown[0];
-            this.groundLevel = this.groundLevelDropdown[0];
-            this.amount = 0;
+            this.weight = this.weightDropdown[0]
+            this.groundLevel = this.groundLevelDropdown[0]
+            this.amount = 0
             this.$refs.amountField.resetValidation()
         },
         checkIfValid(){
             if((this.$refs.amountField).validate()){
                 return true
             }else return false
+        },
+        getGramsOfWeight(weight){
+            let index = this.bagArray.map(bagObj => {
+                return bagObj.size
+            }).indexOf(weight)
+            return this.bagArray[index].grams
         }
     },
-    mounted(){
+    beforeMount(){
         this.init();
     }
 }
