@@ -23,20 +23,27 @@
             v-model="groundLevel"
             ></v-select>
         </v-col>
-        <v-col cols="2">
-            <v-form ref="amountField">
-                <v-text-field
-                class="rowOnLine"
-                type="number"
-                min=0
-                v-model="amount"
-                prepend-icon="mdi-minus"
-                append-icon="mdi-plus"
-                @click:append="incrementAmount"
-                @click:prepend="decrementAmount"
-                :rules="amountFieldRules"
-                ></v-text-field>
-            </v-form>
+        <v-col cols="2" class="rowOnLine">
+            <v-row>
+                <v-col cols="3">
+                    <v-icon @click="decrementAmount">mdi-minus</v-icon>
+                </v-col>
+                <v-col cols="6" class="withOutSidePadding">
+                    <v-form ref="amountField">
+                        <v-text-field
+                        class="rowOnLine"
+                        type="number"
+                        center
+                        min=0
+                        v-model="amount"
+                        :rules="amountFieldRules"
+                        ></v-text-field>
+                    </v-form>
+                </v-col>
+                <v-col cols="3">
+                    <v-icon @click="incrementAmount">mdi-plus</v-icon>
+                </v-col>
+            </v-row>
         </v-col>
         <v-col cols="2">
             <v-btn 
@@ -53,6 +60,10 @@
 .rowOnLine {
     margin-top: 0px;
     padding-top: 0px;
+}
+.withOutSidePadding {
+    padding-left: 0px;
+    padding-right: 0px;
 }
 </style>
 

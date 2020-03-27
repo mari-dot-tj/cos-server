@@ -1,9 +1,11 @@
 <template>
     <v-container>
+        <h3 class="heading">Order overview</h3>
+        <h4 v-if="items.length==0">Your order is empty! Choose some delicious coffees to fill you order!</h4>
         <NewOrderOrderOverviewItem
+        v-else
         v-for="item in items"
-        v-on:remove-from-order="removeFromOrder"
-        v-on:change-amount="changeItemAmount"
+        v-on:removed-from-order="showRemovedFromOrderSnackBar"
         :key="item.item_id"
         :itemId="item.item_id"
         :coffeeId="item.coffee_id"
@@ -12,8 +14,24 @@
         :groundLevel="item.ground_level"
         :amount="item.amount"
         />
+        <v-snackbar v-model="removedFromOrderSnackBar">
+            {{ removedFromOrderSnackBarText }}
+            <v-btn
+                color="primary"
+                text
+                @click="removedFromOrderSnackBar = false"
+            >
+        Close
+      </v-btn>
+        </v-snackbar>
     </v-container>
 </template>
+
+<style scoped>
+.heading{
+    color: #59c8a5;
+}
+</style>
 
 <script>
 import { mapState } from 'vuex'
@@ -27,12 +45,15 @@ export default {
     computed: {
         ...mapState('order', ['items'])
     },
+    data: () => ({
+        removedFromOrderSnackBar: false,
+        removedFromOrderSnackBarText: ""
+    }),
     methods: {
-        removeFromOrder: function(item_id){
-            this.$store.dispatch('order/removeProductFromOrder', item_id)
-        },
-        changeItemAmount: function(item_id, newAmount){
-            this.$store.dispatch('order/changeItemAmount', {item_id, newAmount});
+        showRemovedFromOrderSnackBar(){
+            let text = "Item removed from order."
+            this.removedFromOrderSnackBarText = text
+            this.removedFromOrderSnackBar=true
         }
     }
 }

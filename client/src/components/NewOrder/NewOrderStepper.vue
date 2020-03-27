@@ -11,7 +11,7 @@
 
       <v-divider></v-divider>
 
-      <v-stepper-step step="3">Transportation</v-stepper-step>
+      <v-stepper-step step="3">Delivery</v-stepper-step>
     </v-stepper-header>
 
     <v-stepper-items>
@@ -35,10 +35,11 @@
 
       <v-stepper-content step="3">
         <v-card
-          class="mb-12"
-          color="grey lighten-1"
+          class="mb-12 scroll"
           height="400px"
-        ></v-card>
+        >
+        <NewOrderDelivery/>
+        </v-card>
     
       </v-stepper-content>
       <v-bottom-navigation
@@ -85,6 +86,7 @@
 <script>
 import NewOrderProductList from './NewOrderProductList.vue'
 import NewOrderOrderOverview from './NewOrderOrderOverview'
+import NewOrderDelivery from './NewOrderDelivery'
 
   export default {
     data () {
@@ -94,7 +96,8 @@ import NewOrderOrderOverview from './NewOrderOrderOverview'
     },
     components: {
         NewOrderProductList,
-        NewOrderOrderOverview
+        NewOrderOrderOverview,
+        NewOrderDelivery
     }
   }
 </script>
