@@ -1,25 +1,13 @@
 const express = require("express")
-const mysql = require("mysql")
 const cors = require('cors')
-const config = require('../../config.json')
 
-const Customer = require("../data_access_objects/customer.js")
-const Coffee = require("../data_access_objects/coffee.js")
-const Ground_level = require("../data_access_objects/ground_level.js")
-const Bag = require("../data_access_objects/bag.js")
-const Order = require("../data_access_objects/order.js")
-
+const bagRouter = require("./routers/bag_router.js")
+const orderRouter = require("./routers/order_router.js")
+const coffeeRouter = require("./routers/coffee_router.js")
+const customerRouter = require("./routers/customer_router.js")
+const groundLevelRouter = require("./routers/ground_level_router")
+const deliveryRouter = require("./routers/delivery_router")
 const app = express()
-
-/** Authentication with database */
-const pool = mysql.createPool({
-    connectionLimit: 100,
-    host: config.db.host,
-    user: config.db.user,
-    password: config.db.password,
-    database: config.db.database,
-    debug: false
-})
 
 let allowedOrigins = ['http://localhost:3000',
                       'http://localhost:8080']
@@ -37,120 +25,12 @@ app.use(cors({
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "CALL"]
 }))
-
-let customer = new Customer(pool)
-let coffee = new Coffee(pool)
-let ground_level = new Ground_level(pool)
-let bag = new Bag(pool)
-let order = new Order(pool)
-
-/* Coffee endpoint */
-
-app.get('/coffee', async (req, res) => {
-    try {
-        let d =  await coffee.getAll()
-        res.send(d)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-})
-
-app.get('/coffee/:id', async (req, res) => {
-    try {
-        let d =  await coffee.getByID(req.params.id)
-        res.send(d)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-})
-
-/* Customer endpoint */
-
-app.get('/customer', async (req, res) => {
-    try {
-        let d =  await customer.getAll()
-        res.send(d)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-});
-
-/* Grind level endpoint */
-
-app.get('/ground_level', async (req, res) => {
-    try {
-        let d =  await ground_level.getAll()
-        res.send(d)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-})
-
-/* Bag and bag_customer endpoints */
-
-app.get('/bag', async (req, res) => {
-    try {
-        let d =  await bag.getAll()
-        res.send(d)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-})
-
-app.get('/bag_customer/:id', async (req, res) => {
-    try {
-        let d =  await bag.getDistinct(req.params.id)
-        res.send(d)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-
-})
-
-/* Order endpoints */
-
-app.get('/order', async (req, res) => {
-    try {
-        let d =  await order.getAll()
-        res.send(d)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-})
-
-// const tryCatchHandler = ()
-app.get('/test', async (req, res) => {
-    
-    try {
-
-        let d =  await order.test(1)
-        console.log(d[0][0].name)
-        let jsonTest = d[0][0]
-        
-        let c = await order.test2(111)
-        let t = c[0][0]
-
-        if(t == null){
-            console.log("No such row in database. Bad request.")
-            return res.sendStatus(400)
-        }
-
-        console.log(t.customer_id)
-        jsonTest = {...jsonTest, customer_id: t.customer_id}
-        res.send(jsonTest)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-
-})
+app.use(bagRouter)
+app.use(orderRouter)
+app.use(coffeeRouter)
+app.use(customerRouter)
+app.use(groundLevelRouter)
+app.use(deliveryRouter)
 
 app.listen(3000, () => {
     console.log("Server up and running on port 3000")
