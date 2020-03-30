@@ -36,6 +36,14 @@ create table Constants (
     order_before_prod_day date not null
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
+create table Mail_price (
+    mail_price_id smallint not null auto_increment,
+    name varchar(30),
+    price int(4),
+    primary key (mail_price_id)
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
+
+
 create table Ground_level (
     ground_level_id int(4) not null auto_increment,
     level_name varchar(50) not null,

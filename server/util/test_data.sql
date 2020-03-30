@@ -35,7 +35,28 @@ VALUES
         "ac metus vitae",
         "Curabitur"
     );
-
+INSERT INTO
+    `Mail_price` (
+        `name`,
+        `price`
+        ) 
+VALUES
+    (
+        "Up to 2 kg",
+        49
+    ),
+    (
+        "Up to 10 kg",
+        149
+    ),
+    (
+        "Up to 25 kg",
+        269
+    ),
+    (
+        "Up to 35 kg",
+        389
+    );
 
 INSERT INTO
     `Constants` (

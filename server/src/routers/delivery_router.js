@@ -17,4 +17,14 @@ router.get('/delivery', async (req, res) => {
     }
 })
 
+router.get('/mail_price', async (req, res) => {
+    try {
+        let d =  await delivery.getAllWithPrice()
+        res.send(d)
+
+    } catch (error) {
+        res.sendStatus(400)
+    }
+})
+
 module.exports = router

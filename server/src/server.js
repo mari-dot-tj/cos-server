@@ -25,6 +25,8 @@ app.use(cors({
   },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "CALL"]
 }))
+app.use(express.json())
+
 app.use(bagRouter)
 app.use(orderRouter)
 app.use(coffeeRouter)

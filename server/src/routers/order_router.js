@@ -17,6 +17,48 @@ router.get('/order', async (req, res) => {
     }
 })
 
+// router.get('/test2', (req, res) => {
+
+//     let order123 = [[1, 2, 3, 4], [4, 4, 4, 4], [5, 5, 5, 5]]
+
+//     for (let i = 0; i < order123.length; i++){
+//         order123[i].splice(1, 0, 1)
+//     }
+//     console.log(order123)
+//     res.send("order123.list")
+// })
+router.post('/order', async (req, res) => {
+    try {
+        const fullOrder = req.body
+        let result =  await order.makeUserOrder(req.body)
+        const last_inserted_id = result[0][0]
+        // const last_inserted_id = {last_inserted: 1111}
+
+        if(last_inserted_id == null){
+            console.log("Something went wrong makeing new order.")
+            return res.sendStatus(500)
+        }
+
+        let order_coffee = JSON.parse(fullOrder.list)
+        for (let i = 0; i < order_coffee.length; i++){
+            order_coffee[i].splice(1, 0, last_inserted_id.last_inserted)
+        }
+
+        console.log(order_coffee)
+        let result2 = await order.bindUserOrder(order_coffee)
+
+        if(result2.affectedRows !== order_coffee.length){
+            console.log("Should rollback last insert in Orders on id: " + last_inserted_id.last_inserted)
+            return res.sendStatus(500)
+        }
+
+        res.send("Inserted " + result2.affectedRows + " rows for order nr. " + last_inserted_id.last_inserted)
+
+    } catch (error) {
+        res.sendStatus(400)
+    }
+})
+
 // const tryCatchHandler = ()
 router.get('/test', async (req, res) => {
     
