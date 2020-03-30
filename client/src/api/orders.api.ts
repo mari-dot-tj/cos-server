@@ -1,9 +1,9 @@
-import httpClient from './httpClient';
+import httpClient from './httpClient'
 
 class OrderService {
 
-    private END_POINT = '/order';
+    private END_POINT = '/order'
 
 }
-const orderService = new OrderService;
-export default orderService;
+const orderService = new OrderService
+export default orderService
