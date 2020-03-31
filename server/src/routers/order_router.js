@@ -38,8 +38,9 @@ router.post('/order', async (req, res) => {
             console.log("Something went wrong makeing new order.")
             return res.sendStatus(500)
         }
-
-        let order_coffee = JSON.parse(fullOrder.list)
+        //If JS-object is sent from client remove JSON.parse part
+        // let order_coffee = JSON.parse(fullOrder.list)
+        let order_coffee = fullOrder.list
         for (let i = 0; i < order_coffee.length; i++){
             order_coffee[i].splice(1, 0, last_inserted_id.last_inserted)
         }
