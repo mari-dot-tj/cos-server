@@ -1,4 +1,10 @@
 <template>
+<v-skeleton-loader
+      :loading="groundLevelDropdown.length == 0 || weightDropdown.length == 0"
+      transition="fade-transition"
+      height="94"
+      type="text"
+    >
     <v-row>
         <v-col cols="4">
             <span class="rowOnLine">
@@ -9,7 +15,7 @@
             <v-select
             class="rowOnLine"
             :items="weightDropdown"
-            :label="weight"
+            :label="allBags[0] == undefined ? weight : allBags[0].size"
             single-line
             v-model="weight"
             ></v-select>
@@ -18,7 +24,7 @@
             <v-select
             class="rowOnLine"
             :items="groundLevelDropdown"
-            :label="groundLevel"
+            :label="allGroundLevels[0] == undefined ? groundLevel : allGroundLevels[0].level_name"
             single-line
             v-model="groundLevel"
             ></v-select>
@@ -49,11 +55,12 @@
             <v-btn 
             outlined color="primary" 
             class="rowOnLine" 
-            @click="checkIfValid() ? $emit('add-to-order', coffeeId, coffeeName, weight, getGramsOfWeight(weight), groundLevel, amount) & resetFields() : valid=false">
+            @click="checkIfValid() ? $emit('add-to-order', coffeeId, coffeeName, weight, getGramsOfWeight(weight), findBagIdByWeight(weight), groundLevel, findGroundLevelIdbyGroundLevel(groundLevel) , amount) & resetFields() : valid=false">
                 Add to order
             </v-btn>
         </v-col>
     </v-row>
+</v-skeleton-loader>
 </template>
 
 <style scoped>
@@ -69,6 +76,7 @@
 
 <script>
 import Vue from 'vue'
+import { mapState } from 'vuex'
 
 export default {
     name: 'NewOrderProductListItem',
@@ -80,14 +88,6 @@ export default {
         coffeeId: {
             type: Number,
             required: true
-        },
-        bagArray: {
-            type: Array,
-            required: true,
-        },
-        groundLevelDropdown: {
-            type: Array,
-            required: true,
         }
     },
     data: function (){
@@ -98,19 +98,31 @@ export default {
             groundLevel: "",
             amount: 0,
             weightDropdown: [],
+            groundLevelDropdown: [],
             amountFieldRules: [
                 v => v>0 || 'Amount must be over 0!'
             ]
         }
     },
-    methods: {
-        init(){
-            this.bagArray.map(bagObj => {
+    computed: {
+      ...mapState('products', ['allBags']),
+      ...mapState('products', ['allGroundLevels'])
+    },
+    watch: {
+        allBags: function (newValue, oldValue){
+            this.weight=newValue[0].size
+            newValue.map(bagObj => {
                 this.weightDropdown.push(bagObj.size)
             })
-            this.weight = this.weightDropdown[0]
-            this.groundLevel = this.groundLevelDropdown[0]
         },
+        allGroundLevels: function(newValue, oldValue){
+            this.groundLevel=newValue[0].level_name
+            newValue.map(groundLevelObj => {
+                this.groundLevelDropdown.push(groundLevelObj.level_name)
+            })
+        }
+    },
+    methods: {
         incrementAmount(){
             this.amount++;
         },
@@ -129,14 +141,23 @@ export default {
             }else return false
         },
         getGramsOfWeight(weight){
-            let index = this.bagArray.map(bagObj => {
+            let index = this.allBags.map(bagObj => {
                 return bagObj.size
             }).indexOf(weight)
-            return this.bagArray[index].grams
+            return this.allBags[index].grams
+        },
+        findBagIdByWeight(weight){
+            let index = this.allBags.map(bagObj => {
+                return bagObj.size
+            }).indexOf(weight)
+            return this.allBags[index].bag_id
+        },
+        findGroundLevelIdbyGroundLevel(groundLevel){
+            let index = this.allGroundLevels.map(groundLevelObj => {
+                return groundLevelObj.level_name
+            }).indexOf(groundLevel)
+            return this.allGroundLevels[index].ground_level_id
         }
-    },
-    beforeMount(){
-        this.init();
     }
 }
 </script>

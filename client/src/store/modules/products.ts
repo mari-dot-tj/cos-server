@@ -7,7 +7,7 @@ interface ProductsState {
   allCoffees: Array<{coffee_id: number, name: String, description: String, category_id: number}>;
   allBags: Array<{bag_id: number, size: String, grams: number}>;
   allBagSizes: Array<{size: String}>;
-  allGroundLevels: Array<{level_name: String}>;
+  allGroundLevels: Array<{ground_level_id: number, level_name: String, grinding_fee: number}>;
 }
 
 const state: ProductsState = {
@@ -26,6 +26,9 @@ const module: Module<ProductsState, {}> = {
     },
     setBags: (state, bags) => {
       state.allBags = bags
+    },
+    setGroundLevels: (state, groundLevels) => {
+      state.allGroundLevels = groundLevels
     },
     setBagSizes: (state, bagSizes) => {
       state.allBagSizes = bagSizes
@@ -60,9 +63,7 @@ const module: Module<ProductsState, {}> = {
     getAllGroundLevels: ({commit}) => {
       groundLevelService.getAllGroundLevels()
       .then(groundLevels => {
-        groundLevels.forEach(
-          groundLevel => commit('addGroundLevel', groundLevel.level_name)
-        )
+        commit('setGroundLevels', groundLevels)
       })
     }
   }

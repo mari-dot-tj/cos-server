@@ -1,24 +1,44 @@
 import { Module } from 'vuex/types'
-import coffeeService from '@/api/coffees.api'
+import orderService from '@/api/orders.api'
 
 interface OrderItem{
     item_id: number,
     coffee_id: number,
     coffee_name: String,
     weight: String,
-    grams: number
+    grams: number,
+    bag_id: number
     ground_level: String,
+    ground_level_id: number,
     amount: number,
 }
 
+/*interface Order{
+  info: String,
+  delivery_date: Date,
+  production_date: Date,
+  customer_id: number,
+  status_id: number,
+  delivery_id: number,
+  ref_id: number,
+  items: [
+      {
+      coffee_id: number,
+      bag_id: number,
+      ground_level_id: number,
+      quantity: number
+      }
+    ]
+}*/
+
 interface OrderState{
-  items: Array<OrderItem>
-  delivery: String
+  items: Array<OrderItem>,
+  delivery_id: number,
 }
 
 const state: OrderState = {
     items: [],
-    delivery: "",
+    delivery_id: 1
 }
 
 const module: Module<OrderState, {}> = {
@@ -28,17 +48,29 @@ const module: Module<OrderState, {}> = {
     setItems: (state, {items}) => {
       state.items = items
     },
-    pushProductToOrder: (state, {item_id, coffee_id, coffee_name, weight, grams, ground_level, amount}) => {
+    setDeliveryId: (state, delivery_id) => {
+      state.delivery_id = delivery_id
+    },
+    pushProductToOrder: (state, {item_id, coffee_id, coffee_name, weight, grams, bag_id, ground_level, ground_level_id, amount}) => {
       state.items.push({
           item_id,
           coffee_id,
           coffee_name,
           weight,
           grams,
+          bag_id,
           ground_level,
+          ground_level_id,
           amount
       })
     },
+    postOrderToServer: (state => {
+      let orderItems = []
+      state.items.map(item => {
+        orderItems.push([item.coffee_id, item.bag_id, item.ground_level_id, item.amount])
+      })
+      orderService.postOrder(orderItems, state.delivery_id)
+    }),
     deleteItemFromOrder: (state, item_id) => {
       let index = state.items.map (x => {
         return x.item_id;
@@ -55,20 +87,24 @@ const module: Module<OrderState, {}> = {
     }
   },
   actions: {
-    addProductToOrder: ({state, commit}, {item_id, coffee_id, coffee_name, weight, grams, ground_level, amount}) => {
+    addProductToOrder: ({state, commit}, {item_id, coffee_id, coffee_name, weight, grams, bag_id, ground_level, ground_level_id, amount}) => {
       if(coffee_id!==undefined || coffee_name!== undefined || weight!== undefined || grams!== undefined || ground_level!==undefined || amount!==undefined){
-        commit('pushProductToOrder', {item_id, coffee_id, coffee_name, weight, grams, ground_level, amount})
+        commit('pushProductToOrder', {item_id, coffee_id, coffee_name, weight, bag_id, grams, ground_level, ground_level_id, amount})
         console.log(state.items)
         return true
       }else return false
     },
     removeProductFromOrder: ({state, commit}, item_id) => {
       commit('deleteItemFromOrder', item_id)
-      console.log(state.items)
     },
     changeItemAmount: ({state, commit}, {item_id, newAmount}) => {
       commit('replaceItemAmount', {item_id, newAmount})
-      console.log(state.items)
+    },
+    chooseDelivery: ({state, commit}, delivery_id) => {
+      commit('setDeliveryId', delivery_id)
+    },
+    postOrder: ({state, commit}) => {
+      commit('postOrderToServer')
     }
   },
   getters: {
@@ -77,7 +113,7 @@ const module: Module<OrderState, {}> = {
       state.items.map(item => {
         totalWeightGrams += item.grams*item.amount
       })
-      return {'totalWeightGrams': totalWeightGrams}
+      return {totalWeightGrams: totalWeightGrams}
     }
   }
 }
