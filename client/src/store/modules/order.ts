@@ -38,7 +38,7 @@ interface OrderState{
 
 const state: OrderState = {
     items: [],
-    delivery_id: 1
+    delivery_id: 1,
 }
 
 const module: Module<OrderState, {}> = {
@@ -64,18 +64,14 @@ const module: Module<OrderState, {}> = {
           amount
       })
     },
-    postOrderToServer: (state => {
-      let orderItems = []
-      state.items.map(item => {
-        orderItems.push([item.coffee_id, item.bag_id, item.ground_level_id, item.amount])
-      })
-      orderService.postOrder(orderItems, state.delivery_id)
-    }),
     deleteItemFromOrder: (state, item_id) => {
       let index = state.items.map (x => {
         return x.item_id;
       }).indexOf(item_id);
       state.items.splice(index, 1);
+    },
+    deleteAllItemsFromOrder:(state) => {
+      state.items.splice(0, state.items.length)
     },
     replaceItemAmount: (state, {item_id, newAmount}) => {
       const item = state.items.find(x => x.item_id == item_id);
@@ -104,7 +100,20 @@ const module: Module<OrderState, {}> = {
       commit('setDeliveryId', delivery_id)
     },
     postOrder: ({state, commit}) => {
-      commit('postOrderToServer')
+      let orderItems = []
+      state.items.map(item => {
+        orderItems.push([item.coffee_id, item.bag_id, item.ground_level_id, item.amount])
+      })
+      return new Promise((resolve, reject) => {
+        orderService.postOrder(orderItems, state.delivery_id).then(response => {
+          if(response==200){
+            commit('deleteAllItemsFromOrder')
+          }
+          resolve(response)
+        }, error => {
+          reject(error)
+        })
+      })
     }
   },
   getters: {

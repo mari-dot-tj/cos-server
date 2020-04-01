@@ -92,7 +92,6 @@ export default {
         },
     },
     data: function () {
-        console.log(this);
         return{
             newAmount: this.amount,
             amountFieldRules: [

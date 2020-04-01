@@ -91,7 +91,7 @@
         </v-stepper-items>
       </v-stepper>
     </template>
-    <v-card v-if="!checkIfOrderEmpty()">
+    <v-card v-if="!checkIfOrderEmpty() && !httpRequestSent">
         <v-card-title
           color="primary"
         >
@@ -116,13 +116,13 @@
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
-            @click="dialog = false & submitOrder()"
+            @click="dialog = false; submitOrder()"
           >
             Yes
           </v-btn>
         </v-card-actions>
       </v-card>
-      <v-card v-if="checkIfOrderEmpty()">
+      <v-card v-if="checkIfOrderEmpty() && !httpRequestSent">
         <v-card-title
           color="primary"
         >
@@ -142,7 +142,56 @@
             color="primary"
             @click="dialog = false"
           >
-            I understand
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="httpPostSuccess">
+        <v-card-title
+          color="primary"
+        >
+          Order successfully registered!
+        </v-card-title>
+
+        <v-card-text>
+          {{orderSuccessDialogText}}
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            outlined
+            color="primary"
+            @click="httpPostSuccess=false; dialog = false"
+            to='/order-overview'
+          >
+            OK
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+      <v-card v-if="httpRequestSent && !httpPostSuccess">
+        <v-card-title
+          color="primary"
+        >
+          Could not register order.
+        </v-card-title>
+
+        <v-card-text>
+          {{orderFailDialogText}}
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            outlined
+            color="primary"
+            @click="dialog = false"
+          >
+            OK
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -166,13 +215,24 @@ import { mapState } from 'vuex'
       return {
         e1: 1,
         dialog: false,
+        httpPostSuccess: false,
+        httpRequestSent: false,
         submitDialogText: "Are you sure you want to submit the order?",
-        emptyOrderDialogText: "You cannot submit an empty order. Add coffees to your order before you submit."
+        emptyOrderDialogText: "You cannot submit an empty order. Add coffees to your order before you submit.",
+        orderSuccessDialogText: "Your order was successfully registered!",
+        orderFailDialogText: "Something went wrong. Cound not register order"
       }
     },
     methods: {
       submitOrder(){
+        this.httpRequestSent = true
         this.$store.dispatch('order/postOrder')
+        .then(res => {
+          if(res==200){
+            this.httpPostSuccess=true
+          }
+          this.dialog = true
+        })
       },
       checkIfOrderEmpty(){
         if(this.items.length == 0){

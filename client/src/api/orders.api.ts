@@ -37,8 +37,8 @@ class OrderService {
         var jsonObj = JSON.stringify(obj)
         return httpClient.post(this.END_POINT, jsonObj)
         .then(function (response) {
-            console.log(response)
-            return response.data
+            console.log("Post order request status: ",response.status)
+            return response.status
         })
         .catch((error) => {
             console.warn(error)
