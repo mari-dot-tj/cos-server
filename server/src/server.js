@@ -8,6 +8,7 @@ const customerRouter = require("./routers/customer_router.js")
 const groundLevelRouter = require("./routers/ground_level_router")
 const deliveryRouter = require("./routers/delivery_router")
 const app = express()
+const port = process.env.PORT || 3000
 
 let allowedOrigins = ['http://localhost:3000',
                       'http://localhost:8080']
@@ -34,7 +35,7 @@ app.use(customerRouter)
 app.use(groundLevelRouter)
 app.use(deliveryRouter)
 
-app.listen(3000, () => {
-    console.log("Server up and running on port 3000")
+app.listen(port, () => {
+    console.log("Server up and running on port " + port)
 })
 
