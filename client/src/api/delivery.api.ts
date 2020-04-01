@@ -6,12 +6,16 @@ interface deliveryObject {
     price: number
 }
 
+interface mailPriceObject {
+    mail_price_id: number,
+    name: String,
+    price: number
+}
+
 class DeliveryService {
 
-    private END_POINT = '/delivery'
-
     async getAllDeliveryOptions(): Promise<Array<deliveryObject>> { 
-        return httpClient.get(this.END_POINT)
+        return httpClient.get('/delivery')
             .then(function (response) {
                 console.log(response)
                 return response.data
@@ -21,6 +25,16 @@ class DeliveryService {
             })
     };
 
+    async getAllMailPrices(): Promise<Array<mailPriceObject>> { 
+        return httpClient.get('/mail_price')
+            .then(function (response) {
+                console.log(response)
+                return response.data
+            })
+            .catch((error) => {
+                console.warn(error)
+            })
+    };
 }
 const deliveryService = new DeliveryService
 export default deliveryService

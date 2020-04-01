@@ -2,19 +2,22 @@ import { Module } from 'vuex/types'
 import coffeeService from '@/api/coffees.api'
 import bagService from '@/api/bags.api'
 import groundLevelService from '@/api/groundLevels.api'
+import deliveryService from '@/api/delivery.api'
 
 interface ProductsState {
   allCoffees: Array<{coffee_id: number, name: String, description: String, category_id: number}>;
   allBags: Array<{bag_id: number, size: String, grams: number}>;
   allBagSizes: Array<{size: String}>;
   allGroundLevels: Array<{ground_level_id: number, level_name: String, grinding_fee: number}>;
+  allMailPrices: Array<{mail_price_id: number, name: String, price: number}>
 }
 
 const state: ProductsState = {
   allCoffees: [],
   allBags: [],
   allBagSizes: [],
-  allGroundLevels: []
+  allGroundLevels: [],
+  allMailPrices: []
 }
 
 const module: Module<ProductsState, {}> = {
@@ -29,6 +32,9 @@ const module: Module<ProductsState, {}> = {
     },
     setGroundLevels: (state, groundLevels) => {
       state.allGroundLevels = groundLevels
+    },
+    setMailPrices: (state, mailPries) => {
+      state.allMailPrices = mailPries
     },
     setBagSizes: (state, bagSizes) => {
       state.allBagSizes = bagSizes
@@ -64,6 +70,12 @@ const module: Module<ProductsState, {}> = {
       groundLevelService.getAllGroundLevels()
       .then(groundLevels => {
         commit('setGroundLevels', groundLevels)
+      })
+    },
+    getAllMailPrices: ({commit}) => {
+      deliveryService.getAllMailPrices()
+      .then(mailPrices => {
+        commit('setMailPrices', mailPrices)
       })
     }
   }
