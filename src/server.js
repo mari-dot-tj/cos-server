@@ -1,5 +1,6 @@
 const express = require("express")
 const cors = require('cors')
+const path = require('path')
 
 const bagRouter = require("./routers/bag_router.js")
 const orderRouter = require("./routers/order_router.js")
@@ -34,6 +35,14 @@ app.use(coffeeRouter)
 app.use(customerRouter)
 app.use(groundLevelRouter)
 app.use(deliveryRouter)
+
+if(process.env.NODE_ENV === 'production') {
+  //Static folder for index.html from build
+  app.use(express.static(__dirname, '../public/'))
+
+  //Handle SPA
+  app.get(/.*/, (req, res) => res.sendFile(__dirname, '../public/index.html'))
+}
 
 app.listen(port, () => {
     console.log("Server up and running on port " + port)
