@@ -119,10 +119,9 @@ create table Customer (
     email varchar(100) not null,
     active boolean default 0,
     password text,
-    secret varchar(32),
-    subsciption boolean,
+    subscription boolean,
     zip_code smallint not null,
-    ref_id int not null,
+    ref_id int,
     primary key (customer_id),
     foreign key (zip_code) references Place(zip_code),
     foreign key (ref_id) references Reference(ref_id)

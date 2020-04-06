@@ -44,7 +44,37 @@ if(process.env.NODE_ENV === 'production') {
   app.get(/.*/, (req, res) => res.sendFile(__dirname, '../public/index.html'))
 }
 
+
+// function logOriginalUrl (req, res, next) {
+//   console.log('Request URL:', req.originalUrl)
+//   next()
+// }
+
+// function logMethod (req, res, next) {
+//   console.log('Request Type:', req.method)
+//   next()
+// }
+
+// var logStuff = [logOriginalUrl, logMethod]
+// app.get('/randEndepunkt', logStuff, function (req, res, next) {
+//   res.send('User Info')
+// })
+
 app.listen(port, () => {
     console.log("Server up and running on port " + port)
 })
+
+// const bcrypt = require('bcryptjs')
+
+// const myfunc = async () => {
+//   const pass = 'marierkul'
+//   const hashed = await bcrypt.hash(pass, 8)
+//   console.log(hashed)
+
+//   const isMatch = await bcrypt.compare('maierkul', hashed)
+//   console.log(isMatch)
+
+// }
+
+// myfunc()
 
