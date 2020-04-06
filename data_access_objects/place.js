@@ -13,7 +13,7 @@ module.exports = class Place extends Query {
     /**	Get place by zip_code */
     getOneByZip = async (zip) => {
         return await super.query(
-            "select * FROM Place where zip_code = ?",
+            "select province FROM Place where zip_code = ?",
             [zip]
         )
     }

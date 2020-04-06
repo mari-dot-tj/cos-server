@@ -19,7 +19,7 @@ router.get('/place', async (req, res) => {
 /* Get one palce by zip_code */
 router.get('/place/:id', async (req, res) => {
     try {
-        let d =  await place.getOneByZip(req.body.zip_code)
+        let d =  await place.getOneByZip(req.params.id)
         res.send(d)
 
     } catch (error) {
