@@ -24,7 +24,12 @@ module.exports = class Customer extends Query {
 		)
 	}
 
-
+	checkEmailExists = async (email) => {
+		return await super.query(
+			"select count(email) as res FROM Customer where email = ?",
+			email
+		)
+	}
 
 	createNewCustomer = async (newUser) => {
 		const params = [newUser.name, newUser.address, newUser.phone, newUser.org_number, newUser.email, newUser.active, newUser.password, newUser.zip_code, newUser.subscription, newUser.ref_id]

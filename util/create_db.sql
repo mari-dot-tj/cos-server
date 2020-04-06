@@ -116,7 +116,7 @@ create table Customer (
     address varchar(100) not null,
     phone int(8) not null,
     org_number int not null unique,
-    email varchar(100) not null,
+    email varchar(100) not null unique,
     active boolean default 0,
     password text,
     subscription boolean,

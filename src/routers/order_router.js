@@ -17,16 +17,6 @@ router.get('/order', async (req, res) => {
     }
 })
 
-// router.get('/test2', (req, res) => {
-
-//     let order123 = [[1, 2, 3, 4], [4, 4, 4, 4], [5, 5, 5, 5]]
-
-//     for (let i = 0; i < order123.length; i++){
-//         order123[i].splice(1, 0, 1)
-//     }
-//     console.log(order123)
-//     res.send("order123.list")
-// })
 router.post('/order', async (req, res) => {
     try {
         const fullOrder = req.body
@@ -60,7 +50,6 @@ router.post('/order', async (req, res) => {
     }
 })
 
-// const tryCatchHandler = ()
 router.get('/test', async (req, res) => {
     
     try {

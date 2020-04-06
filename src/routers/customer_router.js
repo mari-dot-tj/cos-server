@@ -31,15 +31,22 @@ router.get('/customer/:id', async (req, res) => {
     }
 })
 /* Create new customer */
-router.post('/customer', smw.checkCustomerPassword(), async (req, res) => {
+router.post('/customer', async (req, res) => {
     try {
+        const rs = await customer.checkEmailExists(req.body.email)
+        console.log(rs[0].res)
+        const count = rs[0]
+        if(count.res > 0){
+            console.log("I have to handle this later with email stuff when email already exists")
+            return res.status(200).send({ msg: "An email has been sent for verification"})
+        }
         //Add handling for checking that params are correct
         let responsFromDB = await customer.createNewCustomer(req.body)
         const id = responsFromDB.insertID
         if (responsFromDB.affectedRows === 0) {
             return res.sendStatus(400)
         }
-        res.sendStatus(201)
+        res.status(201).send({ msg: "An email has been sent for verification"})
 
     } catch (error) {
         res.sendStatus(400)
@@ -71,7 +78,8 @@ router.post('/customer/login', async (req, res) => {
         if (customerData == null) {
             return res.status(401).send("Unable to login")
         }
-        await smw.authorize(password, customerData.password)
+        const auth = await smw.authorize(password, customerData.password)
+        if(!auth) return res.status(401).send("Unable to login")
         res.sendStatus(200)
     } catch (error) {
         res.status(401).send(error)

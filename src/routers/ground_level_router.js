@@ -5,9 +5,6 @@ const router = new express.Router()
 
 let ground_level = new Ground_level(pool.pool)
 
-/* Bag and bag_customer endpoints */
-
-/* Ground level endpoint */
 
 router.get('/ground_level', async (req, res) => {
     try {
