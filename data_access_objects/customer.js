@@ -5,7 +5,7 @@ module.exports = class Customer extends Query {
 	/**	Get all customers from the database */
 	getAll = async () => {
 		return await super.query(
-			"select * FROM Customer",
+			"select customer_id, name, address, phone, org_number, email, active, subscription, zip_code FROM Customer",
 			[]
 		)
 	}
@@ -43,6 +43,10 @@ module.exports = class Customer extends Query {
 			"update Customer set ? where customer_id = ?",
 			[update, id]
 		)
+	}
+
+	publicProfile = () => {
+		console.log(this)
 	}
 
 }

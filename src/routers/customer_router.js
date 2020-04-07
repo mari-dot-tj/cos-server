@@ -9,8 +9,8 @@ let customer = new Customer(pool.pool)
 /* Retrive all customers */
 router.get('/customer', async (req, res) => {
     try {
-        let d = await customer.getAll()
-        res.send(d)
+        let result = await customer.getAll()
+        res.send(result)
 
     } catch (error) {
         res.sendStatus(400)
@@ -24,7 +24,9 @@ router.get('/customer/:id', async (req, res) => {
         if (result[0] == null) {
             return res.sendStatus(404)
         }
-        res.send(result)
+        delete result[0].active
+        delete result[0].password
+        res.send(result[0])
 
     } catch (error) {
         res.sendStatus(400)
