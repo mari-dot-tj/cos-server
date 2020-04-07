@@ -30,17 +30,18 @@ router.get('/customer/:id', async (req, res) => {
         res.sendStatus(400)
     }
 })
-/* Create new customer */
+
+/* Create new customer */ 
 router.post('/customer', async (req, res) => {
     try {
         const rs = await customer.checkEmailExists(req.body.email)
-        console.log(rs[0].res)
         const count = rs[0]
         if(count.res > 0){
             console.log("I have to handle this later with email stuff when email already exists")
             return res.status(200).send({ msg: "An email has been sent for verification"})
         }
         //Add handling for checking that params are correct
+        req.body.password = "TempPass" //TODO: Fix password gen and send to email
         let responsFromDB = await customer.createNewCustomer(req.body)
         const id = responsFromDB.insertID
         if (responsFromDB.affectedRows === 0) {

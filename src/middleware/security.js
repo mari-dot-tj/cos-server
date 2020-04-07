@@ -62,31 +62,3 @@ function tryCatchHandler(func) {
         }
     }
 }
-/* function cache(key, prefix = '') {
-
-    // Or arrange the parameters as you wish to suits your needs
-    // The important thing here is to return an express middleware
-    const cacheKey = prefix + req.params[key];
-    return (req, res, next) => {
-
-        console.log('Inside mycache:' + cacheKey);
-        client.get(cacheKey , function(error, result) {
-            if (error) {
-                console.log(error);
-                return next(error); // Must be an error object
-            }
-
-            if (result !== null && result !== '') {
-                console.log('IN  Cache, fetching from cache and returning it');
-                console.log('Result:' + result);
-                return res.send('success from cache');
-
-            }
-
-            console.log('Not in Cache, so trying to fetch from source ');;
-            next();
-
-        });
-
-    }
-} */

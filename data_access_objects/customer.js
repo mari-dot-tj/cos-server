@@ -32,9 +32,9 @@ module.exports = class Customer extends Query {
 	}
 
 	createNewCustomer = async (newUser) => {
-		const params = [newUser.name, newUser.address, newUser.phone, newUser.org_number, newUser.email, newUser.active, newUser.password, newUser.zip_code, newUser.subscription, newUser.ref_id]
+		const params = [newUser.name, newUser.address, newUser.phone, newUser.org_number, newUser.email, '0', newUser.password, newUser.zip_code, newUser.subscription]
 		return await super.query(
-			"insert into Customer (name, address, phone, org_number, email, active, password, zip_code, subscription, ref_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+			"insert into Customer (name, address, phone, org_number, email, active, password, zip_code, subscription) values (?, ?, ?, ?, ?, ?, ?, ?, ?)",
 			params
 		)
 	}
