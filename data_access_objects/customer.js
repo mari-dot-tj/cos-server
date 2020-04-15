@@ -45,8 +45,29 @@ module.exports = class Customer extends Query {
 		)
 	}
 
-	publicProfile = () => {
-		console.log(this)
+	insertToken = async (token, customer_id) => {
+		return await super.query(
+			"insert into Tokens (token, customer_id) values (?, ?)",
+			[token, customer_id]
+		)
 	}
 
+	getTokens = async (customer_id) => {
+		return await super.query(
+			"select * from Tokens where customer_id = ?",
+			[customer_id]
+		)
+	}
+	deleteAllTokensOnCustomer = async (customer_id) => {
+		return await super.query(
+			"delete from Tokens where customer_id = ?",
+			[customer_id]
+		)
+	}
+	getCustomerByToken = async (token, customer_id) => {
+		return await super.query(
+			"call proc_customer_by_token(?, ?)",
+			[customer_id, token]
+		)
+	}
 }

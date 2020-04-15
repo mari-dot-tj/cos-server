@@ -16,9 +16,17 @@ router.get('/customer', async (req, res) => {
         res.sendStatus(400)
     }
 })
+/* Get customer profile based off of token */
+router.get('/customer/me', smw.authToken(customer), async (req, res) => {
+    try {
+        res.send(req.customer)
+    } catch (error) {
+        res.sendStatus(400)
+    }
+})
 
 /* Get customers credentials using id */
-router.get('/customer/:id', async (req, res) => {
+router.get('/customer/:id', smw.authToken(customer), async (req, res) => {
     try {
         let result = await customer.getOneCustomer(req.params.id)
         if (result[0] == null) {
@@ -34,7 +42,7 @@ router.get('/customer/:id', async (req, res) => {
 })
 
 /* Create new customer */ 
-router.post('/customer', async (req, res) => {
+router.post('/customer', smw.generateRandomString(), smw.securePassword(), async (req, res) => {
     try {
         const rs = await customer.checkEmailExists(req.body.email)
         const count = rs[0]
@@ -42,13 +50,16 @@ router.post('/customer', async (req, res) => {
             console.log("I have to handle this later with email stuff when email already exists")
             return res.status(200).send({ msg: "An email has been sent for verification"})
         }
-        //Add handling for checking that params are correct
-        req.body.password = "TempPass" //TODO: Fix password gen and send to email
+        //TODO: Fix password gen and send to email
         let responsFromDB = await customer.createNewCustomer(req.body)
-        const id = responsFromDB.insertID
+        const id = responsFromDB.insertId
+        console.log(id)
+        console.log(responsFromDB)
         if (responsFromDB.affectedRows === 0) {
             return res.sendStatus(400)
         }
+        // const token = await smw.generateAuthToken(customer, id) //TODO: do something with the token?
+
         res.status(201).send({ msg: "An email has been sent for verification"})
 
     } catch (error) {
@@ -79,27 +90,38 @@ router.post('/customer/login', async (req, res) => {
         const rs = await customer.getOneCustomerByEmail(email)
         const customerData = rs[0]
         if (customerData == null) {
-            return res.status(401).send("Unable to login")
+            return res.status(401).send({msg: "Unable to login"})
         }
-        const auth = await smw.authorize(password, customerData.password)
-        if(!auth) return res.status(401).send("Unable to login")
-        res.sendStatus(200)
+
+        const auth = await smw.authorizePass(password, customerData.password)
+
+        if(!auth) return res.status(401).send({msg: "Unable to login"})
+
+        delete customerData.password
+        const token = await smw.generateAuthToken(customer, customerData.customer_id)
+        res.status(200).send({customer: customerData, token: token})
+
     } catch (error) {
         res.status(401).send(error)
     }
 
 })
 
-router.put('/testp', smw.checkCustomerPassword(customer), smw.securePassword(), async (req, res) => {
+router.post('/testp', smw.authToken(customer) ,async (req, res) => {
     try {
-        if (req.body.password == null) console.log("japp")
-        console.log(res.locals.shouldSkipPassHash)
-        console.log(req.body.password)
-        console.log(req.body)
-        delete req.body.customer_id
-        console.log(req.body)
-        res.send(req.body)
+        console.log("HALLOOO?")
+        
+        res.send(req.customer)
+    } catch (error) {
+        res.sendStatus(400)
+    }
+})
 
+router.post('/testgenerate', async (req, res) => {
+    try {
+        console.log("HALLOOO?")
+        smw.generateAuthToken(customer, req.body.customer_id)
+        res.send("blæsh")
     } catch (error) {
         res.sendStatus(400)
     }

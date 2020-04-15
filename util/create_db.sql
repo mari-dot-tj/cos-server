@@ -127,6 +127,13 @@ create table Customer (
     foreign key (ref_id) references Reference(ref_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
+create table Tokens (
+    token_id int not null auto_increment,
+    token text not null,
+    customer_id int not null,
+    primary key (token_id),
+    foreign key (customer_id) references Customer(customer_id)
+) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Coffee (
     coffee_id int not null auto_increment,

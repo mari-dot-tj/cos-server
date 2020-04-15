@@ -10,9 +10,9 @@ const groundLevelRouter = require("./routers/ground_level_router")
 const deliveryRouter = require("./routers/delivery_router")
 const placeRouter = require("./routers/place_router")
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT
 
-let allowedOrigins = ['http://localhost:3000',
+const allowedOrigins = ['http://localhost:3000',
                       'http://localhost:8080']
 app.use(cors({
   origin: function(origin, callback){
@@ -26,7 +26,7 @@ app.use(cors({
     }
     return callback(null, true)
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "CALL"]
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }))
 app.use(express.json())
 

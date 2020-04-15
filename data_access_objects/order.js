@@ -13,7 +13,6 @@ module.exports = class Order extends Query{
     /**	POST new order from customer */
 	makeUserOrder = async (order) => {
         const parameters = [order.info, order.delivery_date, order.production_date, order.customer_id, order.status_id, order.delivery_id, order.ref_id]
-        console.log(parameters)
 		return await super.query(
 			"call proc_new_user_order(?, ?, ?, ?, ?, ?, ?)",
 			parameters
