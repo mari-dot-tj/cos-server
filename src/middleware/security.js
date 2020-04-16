@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+/* const generateRandomString = (length = 6) => Math.random().toString(20).substr(2, length)
+ */
 module.exports = {
     checkCustomerPassword: (customer) => {
         return async (req, res, next) => {
@@ -41,7 +43,9 @@ module.exports = {
     generateRandomString: () => {
         return async (req, res, next) => {
             try {
-                req.body.password = "TempString"
+                const tempPwd = Math.random().toString(20).substr(2, 10)
+                req.body.password = tempPwd
+                res.locals.tempPwd = tempPwd
                 next()
             } catch (error) {
                 res.status(400).send(error)

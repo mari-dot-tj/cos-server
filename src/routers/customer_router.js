@@ -3,6 +3,7 @@ const pool = require('../db_connection/connection.js')
 const Customer = require("../../data_access_objects/customer.js")
 const router = new express.Router()
 const smw = require("../middleware/security")
+const { sendWelcomeEmail } = require("../emails/customer_account")
 
 let customer = new Customer(pool.pool)
 
@@ -10,6 +11,7 @@ let customer = new Customer(pool.pool)
 router.get('/customer', async (req, res) => {
     try {
         let result = await customer.getAll()
+
         res.send(result)
 
     } catch (error) {
@@ -26,7 +28,7 @@ router.get('/customer/me', smw.authToken(customer), async (req, res) => {
 })
 
 /* Get customers credentials using id – authenticated only by administrator*/
-router.get('/customer/:id',  async (req, res) => {
+router.get('/customer/:id', async (req, res) => {
     try {
         let result = await customer.getOneCustomer(req.params.id)
         if (result[0] == null) {
@@ -41,14 +43,14 @@ router.get('/customer/:id',  async (req, res) => {
     }
 })
 
-/* Create new customer */ 
+/* Create new customer */
 router.post('/customer', smw.generateRandomString(), smw.securePassword(), async (req, res) => {
     try {
         const rs = await customer.checkEmailExists(req.body.email)
         const count = rs[0]
-        if(count.res > 0){
-            console.log("I have to handle this later with email stuff when email already exists")
-            return res.status(200).send({ msg: "An email has been sent for verification"})
+        if (count.res > 0) {
+            console.log("I have to handle this later with email stuff if email already exists")
+            return res.status(200).send({ msg: "An email has been sent for verification" })
         }
         //TODO: Fix password gen and send to email
         let responsFromDB = await customer.createNewCustomer(req.body)
@@ -58,9 +60,9 @@ router.post('/customer', smw.generateRandomString(), smw.securePassword(), async
         if (responsFromDB.affectedRows === 0) {
             return res.sendStatus(400)
         }
-        // const token = await smw.generateAuthToken(customer, id) //TODO: do something with the token?
-
-        res.status(201).send({ msg: "An email has been sent for verification"})
+        
+        await sendWelcomeEmail(req.body.email, req.body.name, res.locals.tempPwd)
+        res.status(201).send({ msg: "An email has been sent for verification" })
 
     } catch (error) {
         res.sendStatus(400)
@@ -90,16 +92,16 @@ router.post('/customer/login', async (req, res) => {
         const rs = await customer.getOneCustomerByEmail(email)
         const customerData = rs[0]
         if (customerData == null) {
-            return res.status(401).send({msg: "Unable to login"})
+            return res.status(401).send({ msg: "Unable to login" })
         }
 
         const auth = await smw.authorizePass(password, customerData.password)
 
-        if(!auth) return res.status(401).send({msg: "Unable to login"})
+        if (!auth) return res.status(401).send({ msg: "Unable to login" })
 
         delete customerData.password
         const token = await smw.generateAuthToken(customer, customerData.customer_id)
-        res.status(200).send({customer: customerData, token: token})
+        res.status(200).send({ customer: customerData, token: token })
 
     } catch (error) {
         res.status(401).send(error)
@@ -111,11 +113,11 @@ router.post('/customer/login', async (req, res) => {
 router.post('/customer/logout', smw.authToken(customer), async (req, res) => {
     try {
         const rs = await customer.deleteTokenAtLogout(req.token, req.customer.customer_id)
-        if(rs.affectedRows === 0){
+        if (rs.affectedRows === 0) {
             throw new Error()
         }
 
-        res.status(200).send({msg: "Logged out"})
+        res.status(200).send({ msg: "Logged out" })
 
     } catch (error) {
         res.status(500).send(error)
@@ -127,11 +129,11 @@ router.post('/customer/logout', smw.authToken(customer), async (req, res) => {
 router.post('/customer/logout-all', smw.authToken(customer), async (req, res) => {
     try {
         const rs = await customer.deleteAllTokensOnCustomer(req.customer.customer_id)
-        if(rs.affectedRows === 0){
+        if (rs.affectedRows === 0) {
             throw new Error()
         }
 
-        res.status(200).send({msg: "Logged out of all devices"})
+        res.status(200).send({ msg: "Logged out of all devices" })
 
     } catch (error) {
         res.status(500).send(error)
@@ -139,10 +141,10 @@ router.post('/customer/logout-all', smw.authToken(customer), async (req, res) =>
 
 })
 
-router.post('/testp', smw.authToken(customer) ,async (req, res) => {
+router.post('/testp', smw.authToken(customer), async (req, res) => {
     try {
         console.log("HALLOOO?")
-        
+
         res.send(req.customer)
     } catch (error) {
         res.sendStatus(400)
