@@ -58,12 +58,21 @@ module.exports = class Customer extends Query {
 			[customer_id]
 		)
 	}
+
 	deleteAllTokensOnCustomer = async (customer_id) => {
 		return await super.query(
 			"delete from Tokens where customer_id = ?",
 			[customer_id]
 		)
 	}
+
+	deleteTokenAtLogout = async (token, customer_id) => {
+		return await super.query(
+			"delete from Tokens where customer_id = ? and token = ?",
+			[customer_id, token]
+		)
+	}
+
 	getCustomerByToken = async (token, customer_id) => {
 		return await super.query(
 			"call proc_customer_by_token(?, ?)",

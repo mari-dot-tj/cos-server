@@ -53,10 +53,13 @@ module.exports = {
         return async (req, res, next) => {
             try {
                 const token = req.header('Authorization').replace('Bearer ', '')
-                const decoded = jwt.verify(token, 'temp')
+                const decoded = jwt.verify(token, process.env.JWT_SECRET)
                 const rs = await customer.getCustomerByToken(token, decoded._id)
-
+                if(rs[0][0] == null){
+                    throw new Error()
+                }
                 req.customer = rs[0][0]
+                req.token = token
                 next()
             } catch (error) {
                 res.status(401).send({msg: "Please authenticate"})
@@ -78,10 +81,8 @@ module.exports = {
     },
     generateAuthToken: async (customer, id) => {
         try {
-            const token = jwt.sign({ _id: id }, 'temp', { expiresIn: '7 days' })
-            console.log(token)
+            const token = jwt.sign({ _id: id }, process.env.JWT_SECRET, { expiresIn: '7 days' })
             const rs = await customer.insertToken(token, id)
-            console.log(rs.affectedRows)
             if(rs.affectedRows === 0){
                 throw new Error()
             }

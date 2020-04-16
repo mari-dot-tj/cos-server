@@ -6,7 +6,7 @@ const smw = require("../middleware/security")
 
 let customer = new Customer(pool.pool)
 
-/* Retrive all customers */
+/* Retrive all customers – authenticated only by administrator*/
 router.get('/customer', async (req, res) => {
     try {
         let result = await customer.getAll()
@@ -25,8 +25,8 @@ router.get('/customer/me', smw.authToken(customer), async (req, res) => {
     }
 })
 
-/* Get customers credentials using id */
-router.get('/customer/:id', smw.authToken(customer), async (req, res) => {
+/* Get customers credentials using id – authenticated only by administrator*/
+router.get('/customer/:id',  async (req, res) => {
     try {
         let result = await customer.getOneCustomer(req.params.id)
         if (result[0] == null) {
@@ -68,18 +68,18 @@ router.post('/customer', smw.generateRandomString(), smw.securePassword(), async
 })
 
 /* Update customer credetials */
-router.put('/customer', smw.checkCustomerPassword(customer), smw.securePassword(), async (req, res) => {
+router.put('/customer', smw.authToken(customer), smw.checkCustomerPassword(customer), smw.securePassword(), async (req, res) => {
     try {
-        const id = req.body.customer_id
+        const id = req.customer.customer_id
         delete req.body.customer_id
         const rs = await customer.updateCustomer(req.body, id)
         if (rs.affectedRows === 0) {
-            return res.sendStatus(400)
+            return res.sendStatus(500)
         }
         res.sendStatus(200)
 
     } catch (error) {
-        res.sendStatus(400)
+        res.sendStatus(500)
     }
 })
 
@@ -103,6 +103,38 @@ router.post('/customer/login', async (req, res) => {
 
     } catch (error) {
         res.status(401).send(error)
+    }
+
+})
+
+/* Logging out customer */
+router.post('/customer/logout', smw.authToken(customer), async (req, res) => {
+    try {
+        const rs = await customer.deleteTokenAtLogout(req.token, req.customer.customer_id)
+        if(rs.affectedRows === 0){
+            throw new Error()
+        }
+
+        res.status(200).send({msg: "Logged out"})
+
+    } catch (error) {
+        res.status(500).send(error)
+    }
+
+})
+
+/* Logging out customers all devices */
+router.post('/customer/logout-all', smw.authToken(customer), async (req, res) => {
+    try {
+        const rs = await customer.deleteAllTokensOnCustomer(req.customer.customer_id)
+        if(rs.affectedRows === 0){
+            throw new Error()
+        }
+
+        res.status(200).send({msg: "Logged out of all devices"})
+
+    } catch (error) {
+        res.status(500).send(error)
     }
 
 })

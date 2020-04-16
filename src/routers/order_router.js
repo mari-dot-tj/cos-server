@@ -1,26 +1,46 @@
 const express = require("express")
 const pool = require('../db_connection/connection.js')
 const Order = require("../../data_access_objects/order.js")
+const Customer = require("../../data_access_objects/customer.js")
 const router = new express.Router()
+const smw = require("../middleware/security")
 
 let order = new Order(pool.pool)
+let customer = new Customer(pool.pool)
 
-/* Order endpoints */
-
-router.get('/order', async (req, res) => {
+/* Get all orders to a specific customer*/
+router.get('/order', smw.authToken(customer), async (req, res) => {
     try {
-        let d =  await order.getAll()
+        let d =  await order.getAllOnCustomer(req.customer.customer_id)
+        if(d[0] == null){
+            throw new Error()
+        }
         res.send(d)
 
     } catch (error) {
-        res.sendStatus(400)
+        res.sendStatus(404)
     }
 })
 
-router.post('/order', async (req, res) => {
+/* Get one order to a specific customer*/
+router.get('/order/:id', smw.authToken(customer), async (req, res) => {
+    try {
+        let d =  await order.getOneById(req.params.id, req.customer.customer_id)
+        if(d[0] == null){
+            throw new Error()
+        }
+        res.send(d)
+
+    } catch (error) {
+        res.sendStatus(404)
+    }
+})
+
+router.post('/order', smw.authToken(customer), async (req, res) => {
     try {
         const fullOrder = req.body
-        let result =  await order.makeUserOrder(req.body)
+        fullOrder.customer_id = req.customer.customer_id
+        let result =  await order.makeUserOrder(fullOrder)
         const last_inserted_id = result[0][0]
         // const last_inserted_id = {last_inserted: 1111}
 
