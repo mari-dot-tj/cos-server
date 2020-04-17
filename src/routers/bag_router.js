@@ -9,7 +9,7 @@ const bag = new Bag(pool.pool)
 const customer = new Customer(pool.pool)
 
 /* Get all bags – authenticated only by admin */
-router.get('/bag', async (req, res) => {
+router.get('/bag', smw.authToken(customer), async (req, res) => {
     try {
         let d =  await bag.getAll()
         res.send(d)

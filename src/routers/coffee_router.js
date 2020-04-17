@@ -9,7 +9,7 @@ const coffee = new Coffee(pool.pool)
 const customer = new Customer(pool.pool)
 
 /* Get all types of coffee – only authenticated by admin */
-router.get('/coffee', async (req, res) => {
+router.get('/coffee', smw.authToken(customer), async (req, res) => {
     try {
         let d =  await coffee.getAll()
         res.send(d)
@@ -35,7 +35,7 @@ router.get('/coffee/me', smw.authToken(customer), async (req, res) => {
 })
 
 /* Get one coffe by its id */
-router.get('/coffee/:id', async (req, res) => {
+router.get('/coffee/:id', smw.authToken(customer) ,async (req, res) => {
     try {
         let d =  await coffee.getByID(req.params.id)
         if(d[0] == null){

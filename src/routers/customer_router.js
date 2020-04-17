@@ -8,7 +8,7 @@ const { sendWelcomeEmail } = require("../emails/customer_account")
 let customer = new Customer(pool.pool)
 
 /* Retrive all customers – authenticated only by administrator*/
-router.get('/customer', async (req, res) => {
+router.get('/customer', smw.authToken(customer) ,async (req, res) => {
     try {
         let result = await customer.getAll()
 
@@ -28,7 +28,7 @@ router.get('/customer/me', smw.authToken(customer), async (req, res) => {
 })
 
 /* Get customers credentials using id – authenticated only by administrator*/
-router.get('/customer/:id', async (req, res) => {
+router.get('/customer/:id', smw.authToken(customer) ,async (req, res) => {
     try {
         let result = await customer.getOneCustomer(req.params.id)
         if (result[0] == null) {
@@ -150,15 +150,6 @@ router.post('/testp', smw.authToken(customer), async (req, res) => {
     }
 })
 
-router.post('/testgenerate', async (req, res) => {
-    try {
-        console.log("HALLOOO?")
-        smw.generateAuthToken(customer, req.body.customer_id)
-        res.send("blæsh")
-    } catch (error) {
-        res.sendStatus(400)
-    }
-})
 
 /* Try/catch handler */
 function tryCatchHandler(func) {
