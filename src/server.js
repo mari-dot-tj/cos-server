@@ -39,7 +39,6 @@ app.use(groundLevelRouter)
 app.use(deliveryRouter)
 app.use(placeRouter)
 
-
 app.listen(port, () => {
     console.log("Server up and running on port " + port)
 })
