@@ -2,11 +2,13 @@ const express = require("express")
 const pool = require('../db_connection/connection.js')
 const Bag = require("../../data_access_objects/bag.js")
 const router = new express.Router()
+const smw = require("../middleware/security")
+const Customer = require("../../data_access_objects/customer.js")
 
-let bag = new Bag(pool.pool)
+const bag = new Bag(pool.pool)
+const customer = new Customer(pool.pool)
 
-/* Bag and bag_customer endpoints */
-
+/* Get all bags – authenticated only by admin */
 router.get('/bag', async (req, res) => {
     try {
         let d =  await bag.getAll()
@@ -17,9 +19,10 @@ router.get('/bag', async (req, res) => {
     }
 })
 
-router.get('/bag_customer/:id', async (req, res) => {
+/* Get bags for specific customer */
+router.get('/bag/me', smw.authToken(customer), async (req, res) => {
     try {
-        let d =  await bag.getDistinct(req.params.id)
+        let d =  await bag.getDistinct(req.customer.customer_id)
         res.send(d)
 
     } catch (error) {

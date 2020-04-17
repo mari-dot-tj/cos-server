@@ -1,16 +1,18 @@
 const nodemailer = require('nodemailer')
 
+
+let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.TEST_EMAIL, // generated ethereal user
+        pass: process.env.TEST_PWD  // generated ethereal password
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+})
+
 const sendWelcomeEmail = async (email, company, password) => {
-    let transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.TEST_EMAIL, // generated ethereal user
-            pass: process.env.TEST_PWD  // generated ethereal password
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    })
 
     // setup email data with unicode symbols
     let mailOptions = {
@@ -34,17 +36,51 @@ const sendWelcomeEmail = async (email, company, password) => {
     `
     mailOptions.html = output
     mailOptions.to = email
-    
+
     // send mail with defined transport object
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             return console.log(error)
         }
         console.log('Message sent: %s', info.messageId)
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info))
+    })
+}
+
+const sendOrderConfirmation = async (email, company, ordernumber) => {
+
+    // setup email data with unicode symbols
+    let mailOptions = {
+        from: '"Jacobsen og Svart" ${process.env.TEST_EMAIL}', // sender address
+        to: '', // list of receivers
+        subject: 'Order confirmation', // Subject line
+        text: '', // plain text body
+        html: '' // html body
+    }
+    const output = `
+        <p>Hi, ${company}!</p>
+        <h2>Order confirmation from Jacobsen og Svart.</h2>
+        <h3>Order number:</h3>
+        <ul>  
+            <li>#${ordernumber}</li>
+        </ul>
+        <p>Thank you for ordering our coffee!</p>
+        <br>
+        <p>For more information about your order, please visit your account at jacobsensvart.no</p>
+        <p>Best regards</p>
+    `
+    mailOptions.html = output
+    mailOptions.to = email
+
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error)
+        }
+        console.log('Message sent: %s', info.messageId)
     })
 }
 
 module.exports = {
-    sendWelcomeEmail
+    sendWelcomeEmail,
+    sendOrderConfirmation
 }

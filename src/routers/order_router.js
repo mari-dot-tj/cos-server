@@ -4,6 +4,7 @@ const Order = require("../../data_access_objects/order.js")
 const Customer = require("../../data_access_objects/customer.js")
 const router = new express.Router()
 const smw = require("../middleware/security")
+const { sendOrderConfirmation } = require("../emails/customer_account")
 
 let order = new Order(pool.pool)
 let customer = new Customer(pool.pool)
@@ -48,20 +49,19 @@ router.post('/order', smw.authToken(customer), async (req, res) => {
             console.log("Something went wrong makeing new order.")
             return res.sendStatus(500)
         }
-        //If JS-object is sent from client remove JSON.parse part
-        // let order_coffee = JSON.parse(fullOrder.list)
+
         let order_coffee = fullOrder.list
         for (let i = 0; i < order_coffee.length; i++){
             order_coffee[i].splice(1, 0, last_inserted_id.last_inserted)
         }
 
-        console.log(order_coffee)
         let result2 = await order.bindUserOrder(order_coffee)
 
         if(result2.affectedRows !== order_coffee.length){
             console.log("Should rollback last insert in Orders on id: " + last_inserted_id.last_inserted)
             return res.sendStatus(500)
         }
+        await sendOrderConfirmation(req.customer.email, req.customer.name, last_inserted_id.last_inserted)
 
         res.send("Inserted " + result2.affectedRows + " rows for order nr. " + last_inserted_id.last_inserted)
 

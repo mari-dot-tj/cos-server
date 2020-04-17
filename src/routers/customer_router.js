@@ -55,12 +55,11 @@ router.post('/customer', smw.generateRandomString(), smw.securePassword(), async
         //TODO: Fix password gen and send to email
         let responsFromDB = await customer.createNewCustomer(req.body)
         const id = responsFromDB.insertId
-        console.log(id)
-        console.log(responsFromDB)
+
         if (responsFromDB.affectedRows === 0) {
             return res.sendStatus(400)
         }
-        
+
         await sendWelcomeEmail(req.body.email, req.body.name, res.locals.tempPwd)
         res.status(201).send({ msg: "An email has been sent for verification" })
 
