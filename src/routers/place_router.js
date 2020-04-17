@@ -1,28 +1,17 @@
 const express = require("express")
 const pool = require('../db_connection/connection.js')
-const Bag = require("../../data_access_objects/bag.js")
+const Place = require("../../data_access_objects/place")
 const router = new express.Router()
-const smw = require("../middleware/security")
 const Customer = require("../../data_access_objects/customer.js")
+const smw = require("../middleware/security")
 
-const bag = new Bag(pool.pool)
 const customer = new Customer(pool.pool)
+const place = new Place(pool.pool)
 
-/* Get all bags – authenticated only by admin */
-router.get('/bag', smw.authToken(customer), async (req, res) => {
+/* Get all zip_codes and places */
+router.get('/place', smw.authToken(customer) ,async (req, res) => {
     try {
-        let d =  await bag.getAll()
-        res.send(d)
-
-    } catch (error) {
-        res.sendStatus(400)
-    }
-})
-
-/* Get bags for specific customer */
-router.get('/bag/me', smw.authToken(customer), async (req, res) => {
-    try {
-        let d =  await bag.getDistinct(req.customer.customer_id)
+        let d =  await place.getAll()
         if(d[0] == null){
             throw new Error()
         }
@@ -31,7 +20,20 @@ router.get('/bag/me', smw.authToken(customer), async (req, res) => {
     } catch (error) {
         res.sendStatus(400)
     }
+})
 
+/* Get one palce by zip_code */
+router.get('/place/:id', smw.authToken(customer) ,async (req, res) => {
+    try {
+        let d =  await place.getOneByZip(req.params.id)
+        if(d[0] == null){
+            throw new Error()
+        }
+        res.send(d)
+
+    } catch (error) {
+        res.sendStatus(400)
+    }
 })
 
 module.exports = router

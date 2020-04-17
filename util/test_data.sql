@@ -170,7 +170,6 @@ INSERT INTO
         `email`,
         `active`,
         `password`,
-        `secret`,
         `subsciption`,
         `zip_code`,
         `ref_id`
@@ -184,7 +183,6 @@ VALUES
         "cursus@urnaUttincidunt.org",
         "1",
         "Lorem ipsum dolor sit",
-        "Integer mollis.",
         "0",
         0001,
         2
@@ -197,7 +195,6 @@ VALUES
         "eros.Nam@Donectemporest.org",
         "0",
         "Lorem ipsum dolor sit",
-        "venenatis a,",
         "1",
         2169,
         5
@@ -210,7 +207,6 @@ VALUES
         "faucibus.ut@cursuspurusNullam.edu",
         "1",
         "Lorem ipsum dolor sit amet, consectetuer",
-        "Nullam scelerisque",
         "0",
         2169,
         5
@@ -223,7 +219,6 @@ VALUES
         "a@nectempus.edu",
         "0",
         "Lorem ipsum dolor sit amet,",
-        "magna a",
         "1",
         2169,
         5
@@ -236,7 +231,6 @@ VALUES
         "fermentum.arcu@infaucibus.edu",
         "0",
         "Lorem ipsum dolor sit amet, consectetuer",
-        "mi lorem,",
         "1",
         9451,
         1
@@ -249,7 +243,6 @@ VALUES
         "nibh.enim.gravida@cursusvestibulum.ca",
         "1",
         "Lorem ipsum dolor sit amet, consectetuer",
-        "risus. Donec",
         "0",
         7725,
         4
@@ -262,7 +255,6 @@ VALUES
         "nisi.Mauris.nulla@congue.net",
         "1",
         "Lorem ipsum dolor sit amet, consectetuer",
-        "et magnis",
         "1",
         4063,
         1
@@ -275,7 +267,6 @@ VALUES
         "Ut.tincidunt.vehicula@ligula.net",
         "0",
         "Lorem ipsum dolor",
-        "eget magna.",
         "0",
         4063,
         2
@@ -288,7 +279,6 @@ VALUES
         "Vestibulum.accumsan.neque@QuisquevariusNam.com",
         "1",
         "Lorem ipsum dolor",
-        "Morbi neque",
         "0",
         2166,
         2
@@ -301,7 +291,6 @@ VALUES
         "et@nulla.net",
         "1",
         "Lorem ipsum dolor sit amet,",
-        "sagittis. Nullam",
         "1",
         2166,
         3
@@ -314,7 +303,6 @@ VALUES
         "in@eget.ca",
         "1",
         "Lorem ipsum dolor sit",
-        "velit. Quisque",
         "1",
         7977,
         2
@@ -327,7 +315,6 @@ VALUES
         "ullamcorper.velit@vulputateeu.net",
         "1",
         "Lorem ipsum dolor sit",
-        "egestas blandit.",
         "1",
         9463,
         5
@@ -340,7 +327,6 @@ VALUES
         "semper.auctor.Mauris@Aliquam.co.uk",
         "1",
         "Lorem ipsum dolor",
-        "Donec porttitor",
         "0",
         4259,
         4
@@ -353,7 +339,6 @@ VALUES
         "accumsan@diam.com",
         "1",
         "Lorem ipsum dolor sit amet,",
-        "Sed neque.",
         "0",
         1969,
         1
@@ -366,7 +351,6 @@ VALUES
         "ultrices.mauris.ipsum@semvitae.edu",
         "0",
         "Lorem ipsum dolor",
-        "pellentesque a,",
         "0",
         1969,
         5
