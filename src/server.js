@@ -39,14 +39,6 @@ app.use(groundLevelRouter)
 app.use(deliveryRouter)
 app.use(placeRouter)
 
-if(process.env.NODE_ENV === 'production') {
-  //Static folder for index.html from build
-  app.use(express.static(__dirname, '../public/'))
-
-  //Handle SPA
-  app.get(/.*/, (req, res) => res.sendFile(__dirname, '../public/index.html'))
-}
-
 app.listen(port, () => {
     console.log("Server up and running on port " + port)
 })
