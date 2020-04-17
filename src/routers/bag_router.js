@@ -23,6 +23,9 @@ router.get('/bag', async (req, res) => {
 router.get('/bag/me', smw.authToken(customer), async (req, res) => {
     try {
         let d =  await bag.getDistinct(req.customer.customer_id)
+        if(d[0] == null){
+            throw new Error()
+        }
         res.send(d)
 
     } catch (error) {

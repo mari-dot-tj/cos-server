@@ -23,6 +23,9 @@ router.get('/coffee', async (req, res) => {
 router.get('/coffee/me', smw.authToken(customer), async (req, res) => {
     try {
         let d =  await coffee.getDistinct(req.customer.customer_id)
+        if(d[0] == null){
+            throw new Error()
+        }
         res.send(d)
 
     } catch (error) {
@@ -35,6 +38,9 @@ router.get('/coffee/me', smw.authToken(customer), async (req, res) => {
 router.get('/coffee/:id', async (req, res) => {
     try {
         let d =  await coffee.getByID(req.params.id)
+        if(d[0] == null){
+            throw new Error()
+        }
         res.send(d)
 
     } catch (error) {

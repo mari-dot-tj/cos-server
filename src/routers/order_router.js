@@ -6,8 +6,8 @@ const router = new express.Router()
 const smw = require("../middleware/security")
 const { sendOrderConfirmation } = require("../emails/customer_account")
 
-let order = new Order(pool.pool)
-let customer = new Customer(pool.pool)
+const order = new Order(pool.pool)
+const customer = new Customer(pool.pool)
 
 /* Get all orders to a specific customer*/
 router.get('/order', smw.authToken(customer), async (req, res) => {
