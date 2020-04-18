@@ -30,13 +30,14 @@ Create a `dev.env`-file located at the top-level repository (remeber to ignore t
 
 - `PORT` specifies the port when in devolopment enviornment for `localhost`
 - `JWT_SECRET` specifies the string to hash the passwords saved in the database
-- `TEST_EMAIL` specifies the gmail account the mails are sent from
+- `TEST_EMAIL` specifies the account the mails are sent from
 - `TEST_PWD` specifies the password for the gmail account
 - `DB_HOST` specifies the host for the database
 - `DB_USER` specifies the database username
 - `DB_NAME` specifies the name of the actual database
 - `DB_PASSWORD` specifies the password for the database
-- `TEST_SERVICE` specifies the service your use for nodemailer (here gmail)
+- `TEST_HOST` specifies the host of your mail, ex.: smtp.gmail.com
+- `TEST_PORT` specifies the port
 
 Following are the `key:value` pairs to fill in the file (remember no spaces):
 ```sh
@@ -48,7 +49,8 @@ DB_HOST=
 DB_USER=
 DB_NAME=
 DB_PASSWORD=
-TEST_SERVICE=
+TEST_HOST=
+TEST_PORT=
 ```
 
 ## Open application
