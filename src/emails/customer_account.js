@@ -1,8 +1,9 @@
 const nodemailer = require('nodemailer')
 
-
-let transporter = nodemailer.createTransport({
-    service: process.env.EST_SERVICE,
+let transport = nodemailer.createTransport({
+    host: process.env.TEST_HOST,
+    port: process.env.TEST_PORT,
+    secure: true,
     auth: {
         user: process.env.TEST_EMAIL, // generated ethereal user
         pass: process.env.TEST_PWD  // generated ethereal password
@@ -38,7 +39,7 @@ const sendWelcomeEmail = async (email, company, password) => {
     mailOptions.to = email
 
     // send mail with defined transport object
-    transporter.sendMail(mailOptions, (error, info) => {
+    transport.sendMail(mailOptions, (error, info) => {
         if (error) {
             return console.log(error)
         }
@@ -72,7 +73,7 @@ const sendOrderConfirmation = async (email, company, ordernumber) => {
     mailOptions.to = email
 
     // send mail with defined transport object
-    transporter.sendMail(mailOptions, (error, info) => {
+    transport.sendMail(mailOptions, (error, info) => {
         if (error) {
             return console.log(error)
         }
