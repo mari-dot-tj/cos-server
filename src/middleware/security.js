@@ -4,18 +4,16 @@ const jwt = require('jsonwebtoken')
 /* const generateRandomString = (length = 6) => Math.random().toString(20).substr(2, length)
  */
 module.exports = {
-    checkCustomerPassword: (customer) => {
+    checkCustomerPassword: () => {
         return async (req, res, next) => {
             try {
-                if (req.body.password == null) {
+                if (!(await bcrypt.compare(req.body.oldPassword, req.customer.password))) {
                     res.locals.shouldSkipPassHash = true
-                    return next()
-                }
-                const rs = await customer.getOneCustomer(req.body.customer_id)
-                let current = rs[0]
-                if ((await bcrypt.compare(req.body.password, current.password))) {
+                    return res.status(401).send({msg: "Please authenticate"})
+                } else if((await bcrypt.compare(req.body.newPassword, req.customer.password))){
                     res.locals.shouldSkipPassHash = true
-                } else {
+                    return res.status(406).send({msg: "Can not use same password as the old one"})
+                }else {
                     res.locals.shouldSkipPassHash = false
                 }
                 next()
@@ -31,7 +29,7 @@ module.exports = {
                 if ((res.locals.shouldSkipPassHash)) {
                     return next()
                 }
-                let hashed = await bcrypt.hash(req.body.password, 8)
+                let hashed = await bcrypt.hash(req.body.newPassword, 8)
                 req.body.password = hashed
                 next()
             } catch (error) {
@@ -44,7 +42,7 @@ module.exports = {
         return async (req, res, next) => {
             try {
                 const tempPwd = Math.random().toString(20).substr(2, 10)
-                req.body.password = tempPwd
+                req.body.newPassword = tempPwd
                 res.locals.tempPwd = tempPwd
                 next()
             } catch (error) {

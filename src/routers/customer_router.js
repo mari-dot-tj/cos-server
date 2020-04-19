@@ -21,6 +21,7 @@ router.get('/customer', smw.authToken(customer) ,async (req, res) => {
 /* Get customer profile based off of token */
 router.get('/customer/me', smw.authToken(customer), async (req, res) => {
     try {
+        delete req.customer.password
         res.send(req.customer)
     } catch (error) {
         res.sendStatus(400)
@@ -49,7 +50,6 @@ router.post('/customer', smw.generateRandomString(), smw.securePassword(), async
         const rs = await customer.checkEmailExists(req.body.email)
         const count = rs[0]
         if (count.res > 0) {
-            console.log("I have to handle this later with email stuff if email already exists")
             return res.status(200).send({ msg: "An email has been sent for verification" })
         }
         //TODO: Fix password gen and send to email
@@ -68,16 +68,35 @@ router.post('/customer', smw.generateRandomString(), smw.securePassword(), async
     }
 })
 
-/* Update customer credetials */
-router.put('/customer', smw.authToken(customer), smw.checkCustomerPassword(customer), smw.securePassword(), async (req, res) => {
+/* Update customer credetials without password*/
+router.put('/customer', smw.authToken(customer), async (req, res) => {
     try {
         const id = req.customer.customer_id
         delete req.body.customer_id
+        delete req.body.password
         const rs = await customer.updateCustomer(req.body, id)
         if (rs.affectedRows === 0) {
             return res.sendStatus(500)
         }
         res.sendStatus(200)
+
+    } catch (error) {
+        res.sendStatus(500)
+    }
+})
+
+/* Update customer password
+*  oldPassword, newPassword in req.body
+*  Sends 401 (Unauthorized) for wrong oldPassword.
+*  Sends 406 (Not acceptable) for newPassword === oldPassword
+*/
+router.put('/customer/sensitive', smw.authToken(customer), smw.checkCustomerPassword(), smw.securePassword(), async (req, res) => {
+    try {
+        const rs = await customer.updateCustomerPassword(req.body.password, req.customer.customer_id)
+        if (rs.affectedRows === 0) {
+            return res.sendStatus(500)
+        }
+        res.status(200).send({msg: "Password reset"})
 
     } catch (error) {
         res.sendStatus(500)

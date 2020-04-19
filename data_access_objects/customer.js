@@ -38,10 +38,18 @@ module.exports = class Customer extends Query {
 			params
 		)
 	}
+
 	updateCustomer = async (update, id) => {
 		return await super.query(
 			"update Customer set ? where customer_id = ?",
 			[update, id]
+		)
+	}
+
+	updateCustomerPassword = async (password, id) => {
+		return await super.query(
+			"update Customer set password = ? where customer_id = ?",
+			[password, id]
 		)
 	}
 
