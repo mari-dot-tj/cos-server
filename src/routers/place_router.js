@@ -9,7 +9,7 @@ const customer = new Customer(pool.pool)
 const place = new Place(pool.pool)
 
 /* Get all zip_codes and places */
-router.get('/place', ,async (req, res) => {
+router.get('/place', async (req, res) => {
     try {
         let d =  await place.getAll()
         if(d[0] == null){
