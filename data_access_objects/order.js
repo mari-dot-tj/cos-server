@@ -34,6 +34,22 @@ module.exports = class Order extends Query {
         )
     }
 
+    /**	GET all orders with details from db */
+    getAllOnCustomerDetails = async (id) => {
+        return await super.query(
+            "call proc_get_customer_orders(?)",
+            id
+        )
+    }
+
+    /**	GET all orders with details from db */
+    getOneOnCustomerDetails = async (id) => {
+        return await super.query(
+            "call proc_get_specific_customer_order(?)",
+            id
+        )
+    }
+
     test = async (id) => {
         const parameters = id
         return await super.query(
@@ -42,21 +58,4 @@ module.exports = class Order extends Query {
         )
     }
 
-    // test2 = async (order) => {
-    //     const parameters = [order.info, order.delivery_date, order.production_date, order.customer_id, order.status_id, order.delivery_id, order.ref_id]
-    //     return await super.query(
-    //         "call proc_new_user_order(?, ?, ?, ?, ?, ?, ?)",
-    //         parameters
-    //     )
-    // }
-
 }
-
-
-// info varchar(200),
-// delivery_date date not null,
-// production_date date default null,
-// customer_id int not null,
-// status_id int not null,
-// delivery_id int not null,
-// ref_id int not null,

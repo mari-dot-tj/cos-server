@@ -12,11 +12,11 @@ const customer = new Customer(pool.pool)
 /* Get all orders to a specific customer*/
 router.get('/order', smw.authToken(customer), async (req, res) => {
     try {
-        let d =  await order.getAllOnCustomer(req.customer.customer_id)
+        let d =  await order.getAllOnCustomerDetails(req.customer.customer_id)
         if(d[0] == null){
             throw new Error()
         }
-        res.send(d)
+        res.send(d[0])
 
     } catch (error) {
         res.sendStatus(404)
@@ -26,11 +26,11 @@ router.get('/order', smw.authToken(customer), async (req, res) => {
 /* Get one order to a specific customer*/
 router.get('/order/:id', smw.authToken(customer), async (req, res) => {
     try {
-        let d =  await order.getOneById(req.params.id, req.customer.customer_id)
+        let d =  await order.getOneOnCustomerDetails(req.params.id)
         if(d[0] == null){
             throw new Error()
         }
-        res.send(d)
+        res.send(d[0])
 
     } catch (error) {
         res.sendStatus(404)
