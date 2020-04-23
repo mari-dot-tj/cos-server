@@ -71,7 +71,7 @@ create table Delivery (
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
 
 create table Place (
-    zip_code smallint not null,
+    zip_code smallint(4) unsigned zerofill not null,
     province varchar(100) not null,
     primary key (zip_code)
 ) ENGINE = InnoDB DEFAULT CHARSET = latin1;
@@ -120,7 +120,7 @@ create table Customer (
     active boolean default 0,
     password text,
     subscription boolean,
-    zip_code smallint not null,
+    zip_code smallint(4) unsigned zerofill not null,
     ref_id int,
     primary key (customer_id),
     foreign key (zip_code) references Place(zip_code),

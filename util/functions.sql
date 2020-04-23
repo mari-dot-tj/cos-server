@@ -71,8 +71,7 @@ ORDER BY
     order_id,
     quantity,
     name;
-END 
---
+END --
 CREATE PROCEDURE `proc_get_specific_customer_order`(IN in_order_id INT) BEGIN
 SELECT
     O.order_id,
@@ -99,4 +98,27 @@ WHERE
 ORDER BY
     quantity,
     name;
-END
+END 
+--
+DELIMITER $$ 
+CREATE TRIGGER after_customer_insert
+AFTER INSERT
+    ON Customer FOR EACH ROW 
+BEGIN
+    INSERT INTO
+        Bag_customer (customer_id, bag_id)
+    SELECT
+        NEW.customer_id,
+        bag_id
+    FROM
+        Bag;
+    INSERT INTO
+        Customer_coffee (coffee_id, customer_id, price)
+    SELECT
+        coffe_id,
+        NEW.customer_id,
+        '150'
+    FROM
+        Coffee;
+END $$ 
+DELIMITER;

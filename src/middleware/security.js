@@ -23,7 +23,7 @@ module.exports = {
 
         }
     },
-    securePassword: () => {
+    securePassword: () => { //TODO: Check that password is no longer than 64 chars
         return async (req, res, next) => {
             try {
                 if ((res.locals.shouldSkipPassHash)) {
