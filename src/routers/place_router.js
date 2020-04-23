@@ -9,7 +9,7 @@ const customer = new Customer(pool.pool)
 const place = new Place(pool.pool)
 
 /* Get all zip_codes and places */
-router.get('/place', smw.authToken(customer) ,async (req, res) => {
+router.get('/place', async (req, res) => {
     try {
         let d =  await place.getAll()
         if(d[0] == null){
@@ -23,7 +23,7 @@ router.get('/place', smw.authToken(customer) ,async (req, res) => {
 })
 
 /* Get one palce by zip_code */
-router.get('/place/:id', smw.authToken(customer) ,async (req, res) => {
+router.get('/place/:id', async (req, res) => {
     try {
         let d =  await place.getOneByZip(req.params.id)
         if(d[0] == null){

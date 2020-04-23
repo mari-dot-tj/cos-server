@@ -9,11 +9,15 @@ const customerRouter = require("./routers/customer_router.js")
 const groundLevelRouter = require("./routers/ground_level_router")
 const deliveryRouter = require("./routers/delivery_router")
 const placeRouter = require("./routers/place_router")
+
 const app = express()
 const port = process.env.PORT
 
 const allowedOrigins = ['http://localhost:3000',
-                      'http://localhost:8080']
+                        'http://localhost:8080,',
+                        process.env.TEST_ORIGIN]
+
+app.disable('x-powered-by')
 app.use(cors({
   origin: function(origin, callback){
     // allow requests with no origin 
