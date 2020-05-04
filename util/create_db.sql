@@ -164,7 +164,7 @@ create table Orders (
 create table Fixed_order (
     fixed_order_id int not null auto_increment,
     order_interval tinyint not null,
-    day_of_week varchar(20) not null,
+    day_of_week tinyint not null,
     order_id int not null,
     primary key (fixed_order_id),
     foreign key (order_id) references Orders(order_id)

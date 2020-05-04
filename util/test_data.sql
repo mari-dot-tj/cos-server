@@ -584,9 +584,9 @@ VALUES
 INSERT INTO
     `Fixed_order` (`order_interval`, `day_of_week`, `order_id`)
 VALUES
-    (1, "wednesday,", 16),
-    (2, "friday", 11),
-    (4, "monday", 14);
+    (1, 4, 16),
+    (2, 5, 11),
+    (4, 1, 14);
 
 INSERT INTO
     `Customer_coffee` (`coffee_id`, `customer_id`, `price`)

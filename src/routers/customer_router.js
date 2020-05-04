@@ -7,17 +7,18 @@ const { sendWelcomeEmail } = require("../emails/customer_account")
 
 let customer = new Customer(pool.pool)
 
-/* Retrive all customers – authenticated only by administrator*/
-router.get('/customer', smw.authToken(customer) ,async (req, res) => {
+/* Retrive all customers – will be authenticated only by administrator
+router.get('/customer', async (req, res) => {
     try {
         let result = await customer.getAll()
-
         res.send(result)
 
     } catch (error) {
         res.sendStatus(400)
     }
 })
+*/
+
 /* Get customer profile based off of token */
 router.get('/customer/me', smw.authToken(customer), async (req, res) => {
     try {
@@ -28,7 +29,7 @@ router.get('/customer/me', smw.authToken(customer), async (req, res) => {
     }
 })
 
-/* Get customers credentials using id – authenticated only by administrator*/
+/* Get customers credentials using id – will be authenticated only by administrator
 router.get('/customer/:id', smw.authToken(customer) ,async (req, res) => {
     try {
         let result = await customer.getOneCustomer(req.params.id)
@@ -43,6 +44,7 @@ router.get('/customer/:id', smw.authToken(customer) ,async (req, res) => {
         res.sendStatus(400)
     }
 })
+*/
 
 /* Create new customer */
 router.post('/customer', smw.generateRandomString(), smw.securePassword(), async (req, res) => {
@@ -158,17 +160,6 @@ router.post('/customer/logout-all', smw.authToken(customer), async (req, res) =>
     }
 
 })
-
-router.post('/testp', smw.authToken(customer), async (req, res) => {
-    try {
-        console.log("HALLOOO?")
-
-        res.send(req.customer)
-    } catch (error) {
-        res.sendStatus(400)
-    }
-})
-
 
 /* Try/catch handler */
 function tryCatchHandler(func) {

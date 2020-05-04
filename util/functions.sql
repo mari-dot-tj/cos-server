@@ -72,7 +72,16 @@ ORDER BY
     quantity,
     name;
 END --
-CREATE PROCEDURE `proc_get_specific_customer_order`(IN in_order_id INT) BEGIN
+CREATE PROCEDURE `proc_get_specific_customer_order`(IN in_order_id INT) BEGIN DECLARE out_interval TINYINT DEFAULT 0;
+DECLARE out_day_of_week TINYINT DEFAULT 0;
+SELECT
+    FO.order_interval,
+    FO.day_of_week INTO out_interval,
+    out_day_of_week
+FROM
+    Fixed_order FO
+WHERE
+    FO.order_id = in_order_id;
 SELECT
     O.order_id,
     O.order_date,
@@ -84,7 +93,9 @@ SELECT
     GL.level_name,
     B.size,
     OS.status_name,
-    D.delivery_option
+    D.delivery_option,
+    out_interval AS order_interval,
+    out_day_of_week AS day_of_week
 FROM
     Orders O
     INNER JOIN Order_coffee OC ON O.order_id = OC.order_id
@@ -98,27 +109,24 @@ WHERE
 ORDER BY
     quantity,
     name;
-END 
---
-DELIMITER $$ 
-CREATE TRIGGER after_customer_insert
-AFTER INSERT
-    ON Customer FOR EACH ROW 
-BEGIN
-    INSERT INTO
-        Bag_customer (customer_id, bag_id)
-    SELECT
-        NEW.customer_id,
-        bag_id
-    FROM
-        Bag;
-    INSERT INTO
-        Customer_coffee (coffee_id, customer_id, price)
-    SELECT
-        coffe_id,
-        NEW.customer_id,
-        '150'
-    FROM
-        Coffee;
-END $$ 
-DELIMITER;
+END --
+DELIMITER $ $ CREATE TRIGGER after_customer_insert
+AFTER
+INSERT
+    ON Customer FOR EACH ROW BEGIN
+INSERT INTO
+    Bag_customer (customer_id, bag_id)
+SELECT
+    NEW.customer_id,
+    bag_id
+FROM
+    Bag;
+INSERT INTO
+    Customer_coffee (coffee_id, customer_id, price)
+SELECT
+    coffe_id,
+    NEW.customer_id,
+    '150'
+FROM
+    Coffee;
+END $ $ DELIMITER;
