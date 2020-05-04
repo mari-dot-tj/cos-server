@@ -59,7 +59,7 @@ router.post('/order', smw.authToken(customer), async (req, res) => {
     try {
         const fullOrder = req.body
         console.log(fullOrder)
-        if (fullOrder.order_interval < 1 || fullOrder.day_of_week < 1 || fullOrder.order_interval > 4 || fullOrder.day_of_week > 5) {
+        if (fullOrder.order_interval < 1 || fullOrder.day_of_week < 1 || fullOrder.order_interval > 4 || fullOrder.day_of_week > 5 || fullOrder.order_interval === undefined || fullOrder.day_of_week === undefined) {
             fullOrder.order_interval = 0
             fullOrder.day_of_week = 0
         }
