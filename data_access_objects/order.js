@@ -51,10 +51,10 @@ module.exports = class Order extends Query {
     }
 
     /**	GET all FIXED orders with details from db */
-    getAllFixedOrdersOnCustomer = async (id) => {
+    getAllFixedOrdersOnCustomer = async (id, active) => {
         return await super.query(
-            "call proc_get_customer_fixed_orders(?)",
-            id
+            "call proc_get_customer_fixed_orders(?, ?)",
+            [id, active]
         )
     }
 
@@ -64,5 +64,12 @@ module.exports = class Order extends Query {
             id
         )
     }
+
+    updateFixedOrder = async (order_id, active) => {
+		return await super.query(
+			"update Fixed_order set active = ? where order_id = ?",
+			[active, order_id]
+		)
+	}
 
 }

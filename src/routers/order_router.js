@@ -23,11 +23,20 @@ router.get('/order', smw.authToken(customer), async (req, res) => {
     }
 })
 
-/* Get all fixed orders to a specific customer*/
-router.get('/order/fixed-order', smw.authToken(customer), async (req, res) => {
+/* Get all fixed orders to a specific customer either active or not active*/
+router.get('/order/fixed-order/active/:id', smw.authToken(customer), async (req, res) => {
     try {
-        let d = await order.getAllFixedOrdersOnCustomer(req.customer.customer_id)
-        if (!d[0] === undefined || !d[0].length) {
+        let id = req.params.id
+        if (id === undefined) {
+            return res.sendStatus(400)
+        } else if (id >= 1) {
+            id = 1
+        } else {
+            id = 0
+        }
+
+        let d = await order.getAllFixedOrdersOnCustomer(req.customer.customer_id, id)
+        if (d[0] === undefined || !d[0].length) {
             throw new Error()
         }
         res.send(d[0])
@@ -90,6 +99,28 @@ router.post('/order', smw.authToken(customer), async (req, res) => {
 
     } catch (error) {
         res.sendStatus(400)
+    }
+})
+
+/* Update orders active if fixed_order */
+router.put('/order', smw.authToken(customer), async (req, res) => {
+    try {
+        if (req.body.active === undefined) {
+            return res.sendStatus(400)
+        } else if (req.body.active >= 1) {
+            req.body.active = 1
+        } else {
+            req.body.active = 0
+        }
+
+        let rs = await order.updateFixedOrder(req.body.order_id, req.body.active)
+        if (rs.affectedRows === 0) {
+            return res.sendStatus(500)
+        }
+        res.sendStatus(200)
+
+    } catch (error) {
+        res.sendStatus(404)
     }
 })
 
