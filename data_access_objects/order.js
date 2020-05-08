@@ -19,9 +19,9 @@ module.exports = class Order extends Query {
 
     /**	POST new order from customer */
     makeUserOrder = async (order) => {
-        const parameters = [order.info, order.delivery_date, order.production_date, order.customer_id, order.status_id, order.delivery_id, order.ref_id]
+        const parameters = [order.info, order.delivery_date, order.production_date, order.customer_id, order.status_id, order.delivery_id, order.ref_id, order.order_interval, order.day_of_week]
         return await super.query(
-            "call proc_new_user_order(?, ?, ?, ?, ?, ?, ?)",
+            "call proc_new_user_order(?, ?, ?, ?, ?, ?, ?, ?, ?)",
             parameters
         )
     }
@@ -50,12 +50,26 @@ module.exports = class Order extends Query {
         )
     }
 
-    test = async (id) => {
-        const parameters = id
+    /**	GET all FIXED orders with details from db */
+    getAllFixedOrdersOnCustomer = async (id, active) => {
         return await super.query(
-            "call test_proc(?)",
-            parameters
+            "call proc_get_customer_fixed_orders(?, ?)",
+            [id, active]
         )
     }
+
+    rollbackOrderOnError = async (id) => {
+        return await super.query(
+            "delete from Order where order_id = ?",
+            id
+        )
+    }
+
+    updateFixedOrder = async (order_id, active) => {
+		return await super.query(
+			"update Fixed_order set active = ? where order_id = ?",
+			[active, order_id]
+		)
+	}
 
 }
