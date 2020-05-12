@@ -10,7 +10,7 @@ Create the mysql database used by server locally:
 echo "CREATE DATABASE [your-database-name]" | mysql -uroot
 ```
 
-In the [util](../blob/master/util) folder you will find the SQL scripts for setting up the databse. Remember to edit anything to your specific needs. 
+In the [util](../master/util) folder you will find the SQL scripts for setting up the databse. Remember to edit anything to your specific needs. 
 The SQL functions and procedures needs to be run as well for the server to work as intended.
 
 From the top-level repository folder:
