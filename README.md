@@ -1,5 +1,6 @@
 # Coffe Ordering System
-This is a serverside api for coffee ordering built with [node] and using the [express] framework. 
+This is a serverside api for coffee ordering built with [node] and using the [express] framework.
+See [client] for the frontend. 
 
 ## Insallation
 Prerequisite: mysql-server installed either locally or hosted online
@@ -9,7 +10,10 @@ Create the mysql database used by server locally:
 echo "CREATE DATABASE [your-database-name]" | mysql -uroot
 ```
 
-From the top-level repository folder:
+In the [util](../master/util) folder you will find the SQL scripts for setting up the database. Remember to edit anything to your specific needs. 
+The SQL functions and procedures in the [functions.sql](../master/util/functions.sql) needs to be run as well for the server to work as intended.
+
+_From the top-level repository folder:_
 ```sh
 $ npm install
 $ npm start
@@ -38,6 +42,7 @@ Create a `dev.env`-file located at the top-level repository (remeber to ignore t
 - `DB_PASSWORD` specifies the password for the database
 - `TEST_HOST` specifies the host of your mail, ex.: smtp.gmail.com
 - `TEST_PORT` specifies the port
+- `TEST_ORIGIN` specifies the origin that the server allowes
 
 Following are the `key:value` pairs to fill in the file (remember no spaces):
 ```sh
@@ -51,6 +56,7 @@ DB_NAME=
 DB_PASSWORD=
 TEST_HOST=
 TEST_PORT=
+TEST_ORIGIN=
 ```
 
 ## Open application
@@ -62,3 +68,4 @@ http://localhost:PORT
 [//]: #
 [node]: <http://nodejs.org>
 [express]: <http://expressjs.com>
+[client]: <https://github.com/mari-dot-tj/cos-client>

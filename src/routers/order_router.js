@@ -42,7 +42,7 @@ router.get('/order/fixed-order/active/:id', smw.authToken(customer), async (req,
         res.send(d[0])
 
     } catch (error) {
-        res.sendStatus(404)
+        res.sendStatus(400)
     }
 })
 
