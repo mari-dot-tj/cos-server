@@ -10,10 +10,10 @@ Create the mysql database used by server locally:
 echo "CREATE DATABASE [your-database-name]" | mysql -uroot
 ```
 
-In the [util](../master/util) folder you will find the SQL scripts for setting up the databse. Remember to edit anything to your specific needs. 
-The SQL functions and procedures needs to be run as well for the server to work as intended.
+In the [util](../master/util) folder you will find the SQL scripts for setting up the database. Remember to edit anything to your specific needs. 
+The SQL functions and procedures in the [functions.sql](../master/util/functions.sql) needs to be run as well for the server to work as intended.
 
-From the top-level repository folder:
+_From the top-level repository folder:_
 ```sh
 $ npm install
 $ npm start
